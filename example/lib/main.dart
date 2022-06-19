@@ -45,13 +45,13 @@ class _MyAppState extends State<MyApp> {
               "APIKEY",
               "JaafarGoogle",
               60,
-              ["GOOGE_FIT"],
+              ["GOOGLE_FIT"],
               ["BODY", "DAILY", "ACTIVITY"]) ??
           false;
-      // connected = await TerraFlutter.checkAuth("APPLE_HEALTH") ?? false;
-      // daily = await TerraFlutter.getDaily("APPLE_HEALTH",
-      //         DateTime.utc(2022, 1, 1), DateTime.utc(2022, 1, 10)) ??
-      //     false;
+      // connected = await TerraFlutter.checkAuth("GOOGLE_FIT") ?? false;
+      daily = await TerraFlutter.getDaily("GOOGLE_FIT",
+              DateTime.utc(2022, 1, 1), DateTime.utc(2022, 1, 10)) ??
+          false;
     } on Exception {
       testText = "Some exception went wrong";
       initialised = false;
