@@ -5,7 +5,7 @@ import Foundation
 
 public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "terra_flutter", binaryMessenger: registrar.messenger())
+    let channel = FlutterMethodChannel(name: "terra_flutter_bridge", binaryMessenger: registrar.messenger())
     let instance = SwiftTerraFlutterPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
@@ -80,13 +80,13 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
     result: @escaping FlutterResult){
     do {
         terra = try Terra(
-										devId: devID,
-										xAPIKey: apiKey,
-										referenceId: referenceId,
-										bodySleepDailyInterval: 60,
-										connections: connectionsSet(connections: connectionsStr),
-										permissions: permissionsSet(permissions: permissionsStr)
-										// TODO add HKTypes
+			devId: devID,
+			xAPIKey: apiKey,
+			referenceId: referenceId,
+			bodySleepDailyInterval: 60,
+			connections: connectionsSet(connections: connectionsStr),
+			permissions: permissionsSet(permissions: permissionsStr)
+			// TODO add HKTypes
                 ){(success: Bool) in result(success)}
     } catch {
         result(FlutterError(code: "error", message: "could not initialise SDK", details: nil))

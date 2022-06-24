@@ -3,15 +3,15 @@
 # Run `pod lib lint terra_flutter.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'terra_flutter'
-  s.version          = '0.0.1'
-  s.summary          = 'A new flutter plugin project.'
+  s.name             = 'terra_flutter_bridge'
+  s.version          = '0.0.2'
+  s.summary          = 'Flutter Bridge for TerraiOS.'
   s.description      = <<-DESC
-A new flutter plugin project.
+Flutter Bridge for Terra iOS
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://github.com/tryterra/terra-flutter'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Try Terra' => 'dev@tryterra.oo' }
+  s.author           = { 'Try Terra' => 'dev@tryterra.co' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'

@@ -142,13 +142,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  terra_flutter:
+  terra_flutter_bridge:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.0.2"
   test_api:
     dependency: transitive
     description:

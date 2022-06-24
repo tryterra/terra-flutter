@@ -1,4 +1,4 @@
-package co.tryterra.terra_flutter;
+package co.tryterra.terra_flutter_bridge;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -13,7 +13,10 @@ import androidx.annotation.NonNull;
 
 import android.content.Context;
 
+import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -24,13 +27,15 @@ import co.tryterra.terra.*;
 import kotlin.Unit;
 
 /** TerraFlutterPlugin */
-public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler {
+public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
   /// The MethodChannel that will the communication between Flutter and native Android
   ///
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
   /// when the Flutter Engine is detached from the Activity
   private MethodChannel channel;
   private Context context;
+  private FlutterActivity activity = null;
+  private BinaryMessenger binaryMessenger = null;
 
   public Terra terra;
 
@@ -81,7 +86,7 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler {
             null
           );
           break;
-        case "GOOGLE":
+        case "GOOGLE_FIT":
           terra.initConnection(
               Connections.GOOGLE_FIT,
               this.context,
@@ -136,7 +141,6 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler {
         return Unit.INSTANCE;
       }
     );
-    result.success(true);
   }
   private void getDaily(String connection, Date startDate, Date endDate, Result result){
     this.terra.getDaily(
@@ -148,7 +152,6 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler {
         return Unit.INSTANCE;
       }
     );
-    result.success(true);
   }
   private void getNutrition(String connection, Date startDate, Date endDate, Result result){
     this.terra.getNutrition(
@@ -160,7 +163,6 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler {
         return Unit.INSTANCE;
       }
     );
-    result.success(true);
   }
   private void getSleep(String connection, Date startDate, Date endDate, Result result){
     this.terra.getSleep(
@@ -172,7 +174,6 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler {
         return Unit.INSTANCE;
       }
     );
-    result.success(true);
   }
   private void deauth(String connection, Result Result){
     this.terra.disconnect(Objects.requireNonNull(parseConnection(connection)));
@@ -180,9 +181,30 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler {
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "terra_flutter");
+    binaryMessenger = flutterPluginBinding.getBinaryMessenger();
+    // this.context = flutterPluginBinding.getApplicationContext();
+  }
+
+  @Override
+  public void onAttachedToActivity(ActivityPluginBinding binding){
+    this.context = (Context) binding.getActivity();
+    channel = new MethodChannel(binaryMessenger, "terra_flutter_bridge");
     channel.setMethodCallHandler(this);
-    this.context = flutterPluginBinding.getApplicationContext();
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+
+  }
+
+  @Override
+  public void onDetachedFromActivity() {
+
   }
 
   @Override
@@ -201,6 +223,7 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler {
           call.argument("permissions"),
           result
         );
+        break;
       // case "checkAuth":
       //   checkAuth(
       //     call.argument("connection"),
@@ -257,6 +280,7 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler {
           call.argument("connection"),
           result
         );
+        break;
       default:
         result.notImplemented();
         break;

@@ -1,4 +1,4 @@
-import 'package:terra_flutter/terra_flutter.dart';
+import 'package:terra_flutter_bridge/terra_flutter_bridge.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -41,8 +41,8 @@ class _MyAppState extends State<MyApp> {
       testText = await TerraFlutter.testFunction("Custom parameter") ??
           "Some function call went wrong";
       initialised = await TerraFlutter.initTerra(
-              "devID",
-              "APIKEY",
+              "devId",
+              "xapikey",
               "JaafarGoogle",
               60,
               ["GOOGLE_FIT"],

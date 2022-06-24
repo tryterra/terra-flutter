@@ -1,4 +1,4 @@
-group 'co.tryterra.terra_flutter'
+group 'co.tryterra.terra_flutter_bridge'
 version '1.0'
 
 buildscript {
@@ -34,6 +34,6 @@ android {
     }
 
     dependencies {
-        implementation 'co.tryterra:terra-android:1.0.2'
+        implementation 'co.tryterra:terra-android:1.0.3'
     }
 }

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 class TerraFlutter {
-  static const MethodChannel _channel = MethodChannel('terra_flutter');
+  static const MethodChannel _channel = MethodChannel('terra_flutter_bridge');
 
   static Future<String?> testFunction(String text) async {
     final String? version =
