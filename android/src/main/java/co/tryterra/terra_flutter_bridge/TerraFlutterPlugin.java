@@ -39,11 +39,12 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
 
   public Terra terra;
 
+  // parsing
   private Connections parseConnection(String connection){
     switch (connection){
         case "SAMSUNG":
             return Connections.SAMSUNG;
-        case "GOOGLE_FIT":
+        case "GOOGLE":
             return Connections.GOOGLE_FIT;
         case "FREESTYLE_LIBRE":
             return Connections.FREESTYLE_LIBRE;
@@ -51,66 +52,100 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
     return null;
   }
 
+  private Permissions parsePermissions(String permission){
+      switch (permission){
+          case "ACTIVITY":
+              return Permissions.ACTIVITY;
+          case "ATHLETE":
+              return Permissions.ATHLETE;
+          case "BODY":
+              return Permissions.BODY;
+          case "DAILY":
+              return Permissions.DAILY;
+          case "NUTRITION":
+              return Permissions.NUTRITION;
+          case "SLEEP":
+              return Permissions.SLEEP;
+      }
+      return null;
+  }
+
   private void testFunction(String text, @NonNull Result result){
     result.success(text);
   }
 
+
+  // init
   private void initTerra(
     String devID,
-    String apiKey,
     String referenceId,
-    int intervalMinutes,
-    ArrayList<String> connectionsStr,
-    ArrayList<String> permissionsStr,
+    int sleepTimer,
+    int dailyTimer,
+    int bodyTimer,
+    int activityTimer,
+    int nutritionTimer,
     Result result
   ) {
-    this.terra = new Terra(
-            devID,
-            apiKey,
-      Objects.requireNonNull(this.context),
-            intervalMinutes * 60 * 1000,
-            intervalMinutes * 60 * 1000,
-            intervalMinutes * 60 * 1000,
-            intervalMinutes * 60 * 1000,
-            intervalMinutes * 60 * 1000,
-            referenceId,
-            null
-            );
-    for (String connection : connectionsStr) {
-      switch (connection) {
-        case "SAMSUNG":
-          terra.initConnection(
-            Connections.SAMSUNG,
-            this.context,
-            new HashSet<>(Arrays.asList(Permissions.ACTIVITY, Permissions.ATHLETE, Permissions.BODY, Permissions.DAILY, Permissions.NUTRITION, Permissions.SLEEP)),
-            null
-          );
-          break;
-        case "GOOGLE_FIT":
-          terra.initConnection(
-              Connections.GOOGLE_FIT,
-              this.context,
-              new HashSet<>(Arrays.asList(Permissions.ACTIVITY, Permissions.ATHLETE, Permissions.BODY, Permissions.DAILY, Permissions.NUTRITION, Permissions.SLEEP)),
-            null
-          );
-          break;
-        case "FREESTYLE_LIBRE":
-          terra.initConnection(
-              Connections.FREESTYLE_LIBRE,
-              this.context,
-              new HashSet<>(),
-              null
-          );
-          break;
-        default:
-          break;
-      }
+    try{
+      this.terra = new Terra(
+        devID,
+        Objects.requireNonNull(this.context),
+        bodyTimer * 60 * 1000,
+        sleepTimer * 60 * 1000,
+        dailyTimer * 60 * 1000,
+        nutritionTimer * 60 * 1000,
+        activityTimer * 60 * 1000,
+        referenceId,
+        null
+      );
+      result.success(true);
     }
-    result.success(true);
-}
-  private void checkAuth(String connection, Result result){
-    // result.success(!this.terra.getUserId(parseConnection(connection)).equals(""));
+    catch(Exception e){
+      result.error("Init Failure", "Could not initialise Terra", e);
+    }
   }
+
+  private void initConnection(
+    String connection,
+    String token,
+    Boolean schedulerOn,
+    ArrayList<String> permissions,
+    ArrayList<String> customPermissions,
+    Result result
+  ){
+    if (parseConnection(connection) == null){
+        result.error("Connection Failure", "Invalid Connection has been passed for the android platform", null);
+        return;
+    }
+
+    HashSet<Permissions> perms = new HashSet<>();
+    for (String permission: permissions){
+        perms.add(parsePermissions(permission));
+    }
+    this.terra.initConnection(
+      Objects.requireNonNull(parseConnection(connection)),
+      token, Objects.requireNonNull(this.context),
+      perms,
+      schedulerOn,
+      null,
+      (success)-> {
+        result.success(success);
+        return Unit.INSTANCE;
+      });
+  }
+
+  private void getUserId(String connection, Result result){
+    try {
+      result.success(terra.getUserId(
+        Objects.requireNonNull(parseConnection(connection))
+      ));
+    }
+    catch(Exception e) {
+      result.error("Getter Failure", "Could not get user id", e);
+    }
+  }
+
+  // getters
   private void getAthlete(String connection, Result result){
     this.terra.getAthlete(
       Objects.requireNonNull(parseConnection(connection)),
@@ -175,8 +210,16 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
       }
     );
   }
-  private void deauth(String connection, Result Result){
-    this.terra.disconnect(Objects.requireNonNull(parseConnection(connection)));
+
+  // freestyle
+  private void activateGlucoseSensor(Result result){
+    try{
+      terra.activateSensor();
+      result.success(true);
+    }
+    catch(Exception e){
+      result.error("Sensor Activation Failure", "Could not activate freestyle sensor", e);
+    }
   }
 
   @Override
@@ -216,24 +259,30 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
       case "initTerra":
         initTerra(
           call.argument("devID"),
-          call.argument("apiKey"),
           call.argument("referenceID"),
-          call.argument("intervalMinutes"),
-          call.argument("connections"),
-          call.argument("permissions"),
+          call.argument("sleepTimer"),
+          call.argument("dailyTimer"),
+          call.argument("bodyTimer"),
+          call.argument("activityTimer"),
+          call.argument("nutritionTimer"),
           result
         );
         break;
-      // case "checkAuth":
-      //   checkAuth(
-      //     call.argument("connection"),
-      //     result
-      //   );
+      case "initConnection":
+        initConnection(
+          call.argument("connection"),
+          call.argument("token"),
+          call.argument("schedulerOn"),
+          call.argument("permissions"),
+          call.argument("customPermissions"),
+          result
+        );
+        break;
       case "getActivity":
         getActivity(
           call.argument("connection"),
           Date.from(Instant.parse(call.argument("startDate"))),
-          Date.from( Instant.parse(call.argument("endDate"))),
+          Date.from(Instant.parse(call.argument("endDate"))),
           result
         );
         break;
@@ -241,7 +290,7 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
         getBody(
           call.argument("connection"),
           Date.from(Instant.parse(call.argument("startDate"))),
-          Date.from( Instant.parse(call.argument("endDate"))),
+          Date.from(Instant.parse(call.argument("endDate"))),
           result
         );
         break;
@@ -249,7 +298,7 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
         getDaily(
           call.argument("connection"),
           Date.from(Instant.parse(call.argument("startDate"))),
-          Date.from( Instant.parse(call.argument("endDate"))),
+          Date.from(Instant.parse(call.argument("endDate"))),
           result
         );
         break;
@@ -257,7 +306,7 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
         getNutrition(
           call.argument("connection"),
           Date.from(Instant.parse(call.argument("startDate"))),
-          Date.from( Instant.parse(call.argument("endDate"))),
+          Date.from(Instant.parse(call.argument("endDate"))),
           result
         );
         break;
@@ -265,7 +314,7 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
         getSleep(
           call.argument("connection"),
           Date.from(Instant.parse(call.argument("startDate"))),
-          Date.from( Instant.parse(call.argument("endDate"))),
+          Date.from(Instant.parse(call.argument("endDate"))),
           result
         );
         break;
@@ -275,9 +324,14 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
           result
         );
         break;
-      case "deauth":
-        deauth(
-          call.argument("connection"),
+      case "activateGlucoseSensor":
+        activateGlucoseSensor(
+          result
+        );
+        break;
+      case "getUserId":
+        getUserId(
+          call.argument("connection"), 
           result
         );
         break;

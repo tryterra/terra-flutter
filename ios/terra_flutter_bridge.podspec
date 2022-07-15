@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'terra_flutter_bridge'
-  s.version          = '0.0.2'
+  s.version          = '0.0.3'
   s.summary          = 'Flutter Bridge for TerraiOS.'
   s.description      = <<-DESC
 Flutter Bridge for Terra iOS
@@ -15,7 +15,7 @@ Flutter Bridge for Terra iOS
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'TerraiOS', '~> 1.0.1'
+  s.dependency 'TerraiOS', '~> 1.0.16'
   s.frameworks = ['HealthKit']
 
   s.platform = :ios, '13.0'
