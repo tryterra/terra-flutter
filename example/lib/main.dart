@@ -31,19 +31,16 @@ class _MyAppState extends State<MyApp> {
     bool connected = false;
     bool daily = false;
     String testText;
-    Connection c = Connection.appleHealth;
+    Connection c = Connection.googleFit;
     // Function messages may fail, so we use a try/catch Exception.
     // We also handle the message potentially returning null.
     // USE YOUR OWN CATCH BLOCKS
     // HAVING ALL FUNCTIONS IN THE SAME CATCH IS NOT A GOOD IDEA
     try {
-      testText = await TerraFlutter.testFunction(
-              "Awaiting init functions before pulling user ID") ??
-          "Some function call went wrong";
       initialised =
-          await TerraFlutter.initTerra("devID", "refID", 60, 60, 60, 60, 60) ??
+          await TerraFlutter.initTerra("testingElliott", "refID", 60, 60, 60, 60, 60) ??
               false;
-      connected = await TerraFlutter.initConnection(c, "token", true, [
+      connected = await TerraFlutter.initConnection(c, "70393c0ecb912758f509966ae16998f5c294b7236620823de84aa7503f5a810a", false, [
             Permission.activity,
             Permission.daily,
             Permission.sleep,
@@ -52,22 +49,37 @@ class _MyAppState extends State<MyApp> {
             Permission.body
           ], []) ??
           false;
+
+      await TerraFlutter.initConnection(Connection.freestyleLibre, "8d840569b5b7fa80cbc2b5e21c0bad63ea881265a353a83f857a708d49ae893e", true, [
+            Permission.activity,
+            Permission.daily,
+            Permission.sleep,
+            Permission.nutrition,
+            Permission.athlete,
+            Permission.body
+          ], []) ??
+          false;
+
+      Future<String?> details = TerraFlutter.readGlucoseData();
+      details.then((data) {
+        print(data);
+      });
       testText = await TerraFlutter.getUserId(c) ?? "1234";
       daily = await TerraFlutter.getDaily(
-              c, DateTime.utc(2022, 1, 1), DateTime.utc(2022, 1, 2)) ??
+              c, DateTime(2022, 7, 25), DateTime(2022, 7, 26)) ??
           false;
       daily = await TerraFlutter.getAthlete(c) ?? false;
       daily = await TerraFlutter.getBody(
-              c, DateTime.utc(2022, 1, 1), DateTime.utc(2022, 1, 2)) ??
+              c, DateTime(2022, 7, 25), DateTime(2022, 7, 26)) ??
           false;
       daily = await TerraFlutter.getNutrition(
-              c, DateTime.utc(2022, 1, 1), DateTime.utc(2022, 1, 2)) ??
+              c, DateTime(2022, 7, 25), DateTime(2022, 7, 26)) ??
           false;
       daily = await TerraFlutter.getSleep(
-              c, DateTime.utc(2022, 1, 1), DateTime.utc(2022, 1, 2)) ??
+              c, DateTime(2022, 7, 25), DateTime(2022, 7, 26)) ??
           false;
       daily = await TerraFlutter.getActivity(
-              c, DateTime.utc(2022, 1, 1), DateTime.utc(2022, 1, 2)) ??
+              c, DateTime(2022, 7, 25), DateTime(2022, 7, 26)) ??
           false;
     } on Exception catch (e) {
       // print('error caught: $e');

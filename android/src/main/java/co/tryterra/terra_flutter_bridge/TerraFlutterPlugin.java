@@ -23,6 +23,8 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 
+import com.google.gson.Gson;
+
 import co.tryterra.terra.*;
 import kotlin.Unit;
 
@@ -36,6 +38,8 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
   private Context context;
   private FlutterActivity activity = null;
   private BinaryMessenger binaryMessenger = null;
+
+  private Gson gson = new Gson();
 
   public Terra terra;
 
@@ -212,10 +216,12 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
   }
 
   // freestyle
-  private void activateGlucoseSensor(Result result){
+  private void readGlucoseData(Result result){
     try{
-      terra.activateSensor();
-      result.success(true);
+      this.terra.readGlucoseData((details) -> {
+        result.success(gson.toJson(details));
+        return Unit.INSTANCE;
+      });
     }
     catch(Exception e){
       result.error("Sensor Activation Failure", "Could not activate freestyle sensor", e);
@@ -324,8 +330,8 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
           result
         );
         break;
-      case "activateGlucoseSensor":
-        activateGlucoseSensor(
+      case "readGlucoseData":
+        readGlucoseData(
           result
         );
         break;

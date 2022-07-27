@@ -345,12 +345,15 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 
 	// Freestyle
 	func readGlucoseData(result: @escaping FlutterResult){
-		do {
-			try terra?.readGlucoseData()
-			result(true)
-		} catch {
-			result(false)
-		}
+		 terra?.readGlucoseData{(details) in
+            do {
+                let jsonData = try JSONEncoder().encode(details)
+                result(String(data: jsonData, encoding: .utf8) ?? "")
+            }
+            catch {
+                result(nil)
+            }
+        }
 	}
 
 	func activateGlucoseSensor(result: @escaping FlutterResult){

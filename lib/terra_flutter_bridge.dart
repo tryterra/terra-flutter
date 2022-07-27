@@ -3,6 +3,11 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+
+String convertToProperIsoFormat(DateTime date){
+      return date.toUtc().toIso8601String();
+}
+
 // SDK connections
 enum Connection {
   appleHealth,
@@ -236,8 +241,8 @@ class TerraFlutter {
       Connection connection, DateTime startDate, DateTime endDate) async {
     final bool? success = await _channel.invokeMethod('getActivity', {
       "connection": connection.connectionString,
-      "startDate": startDate.toIso8601String(),
-      "endDate": endDate.toIso8601String()
+      "startDate": convertToProperIsoFormat(startDate),
+      "endDate": convertToProperIsoFormat(endDate)
     });
     return success;
   }
@@ -252,8 +257,8 @@ class TerraFlutter {
       Connection connection, DateTime startDate, DateTime endDate) async {
     final bool? success = await _channel.invokeMethod('getBody', {
       "connection": connection.connectionString,
-      "startDate": startDate.toIso8601String(),
-      "endDate": endDate.toIso8601String()
+      "startDate": convertToProperIsoFormat(startDate),
+      "endDate": convertToProperIsoFormat(endDate)
     });
     return success;
   }
@@ -262,8 +267,8 @@ class TerraFlutter {
       Connection connection, DateTime startDate, DateTime endDate) async {
     final bool? success = await _channel.invokeMethod('getDaily', {
       "connection": connection.connectionString,
-      "startDate": startDate.toIso8601String(),
-      "endDate": endDate.toIso8601String()
+      "startDate": convertToProperIsoFormat(startDate),
+      "endDate": convertToProperIsoFormat(endDate)
     });
     return success;
   }
@@ -272,8 +277,8 @@ class TerraFlutter {
       Connection connection, DateTime startDate, DateTime endDate) async {
     final bool? success = await _channel.invokeMethod('getNutrition', {
       "connection": connection.connectionString,
-      "startDate": startDate.toIso8601String(),
-      "endDate": endDate.toIso8601String()
+      "startDate": convertToProperIsoFormat(startDate),
+      "endDate": convertToProperIsoFormat(endDate)
     });
     return success;
   }
@@ -282,8 +287,8 @@ class TerraFlutter {
       Connection connection, DateTime startDate, DateTime endDate) async {
     final bool? success = await _channel.invokeMethod('getSleep', {
       "connection": connection.connectionString,
-      "startDate": startDate.toIso8601String(),
-      "endDate": endDate.toIso8601String()
+      "startDate": convertToProperIsoFormat(startDate),
+      "endDate": convertToProperIsoFormat(endDate)
     });
     return success;
   }
@@ -294,8 +299,8 @@ class TerraFlutter {
   }
 
   // only for apple
-  static Future<bool?> readGlucoseData() async {
-    final bool? success = await _channel.invokeMethod('readGlucoseData');
+  static Future<String?> readGlucoseData() async {
+    final String? success = await _channel.invokeMethod('readGlucoseData');
     return success;
   }
 }
