@@ -31,42 +31,23 @@ class _MyAppState extends State<MyApp> {
     bool connected = false;
     bool daily = false;
     String testText;
-    Connection c = Connection.googleFit;
+    Connection c = Connection.appleHealth;
     // Function messages may fail, so we use a try/catch Exception.
     // We also handle the message potentially returning null.
     // USE YOUR OWN CATCH BLOCKS
     // HAVING ALL FUNCTIONS IN THE SAME CATCH IS NOT A GOOD IDEA
     try {
+      DateTime now = DateTime.now().toUtc();
+      DateTime lastMidnight = DateTime(now.year, now.month, now.day);
       initialised =
-          await TerraFlutter.initTerra("testingElliott", "refID", 60, 60, 60, 60, 60) ??
+          await TerraFlutter.initTerra("Dev ID", "refID") ??
               false;
-      connected = await TerraFlutter.initConnection(c, "70393c0ecb912758f509966ae16998f5c294b7236620823de84aa7503f5a810a", false, [
-            Permission.activity,
-            Permission.daily,
-            Permission.sleep,
-            Permission.nutrition,
-            Permission.athlete,
-            Permission.body
-          ], []) ??
+      connected = await TerraFlutter.initConnection(c, "TOKEN", false, []) ??
           false;
 
-      await TerraFlutter.initConnection(Connection.freestyleLibre, "8d840569b5b7fa80cbc2b5e21c0bad63ea881265a353a83f857a708d49ae893e", true, [
-            Permission.activity,
-            Permission.daily,
-            Permission.sleep,
-            Permission.nutrition,
-            Permission.athlete,
-            Permission.body
-          ], []) ??
-          false;
-
-      Future<String?> details = TerraFlutter.readGlucoseData();
-      details.then((data) {
-        print(data);
-      });
       testText = await TerraFlutter.getUserId(c) ?? "1234";
       daily = await TerraFlutter.getDaily(
-              c, DateTime(2022, 7, 25), DateTime(2022, 7, 26)) ??
+              c, lastMidnight, now) ??
           false;
       daily = await TerraFlutter.getAthlete(c) ?? false;
       daily = await TerraFlutter.getBody(
@@ -76,7 +57,7 @@ class _MyAppState extends State<MyApp> {
               c, DateTime(2022, 7, 25), DateTime(2022, 7, 26)) ??
           false;
       daily = await TerraFlutter.getSleep(
-              c, DateTime(2022, 7, 25), DateTime(2022, 7, 26)) ??
+              c, now.subtract(Duration(days: 1)), now) ??
           false;
       daily = await TerraFlutter.getActivity(
               c, DateTime(2022, 7, 25), DateTime(2022, 7, 26)) ??

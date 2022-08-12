@@ -31,8 +31,6 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
       switch permission {
           case "ACTIVITY":
               return Permissions.ACTIVITY
-          case "ATHLETE":
-              return Permissions.ATHLETE
           case "BODY":
               return Permissions.BODY
           case "DAILY":
@@ -162,28 +160,19 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 	private func initTerra(
 		devID: String,
 		referenceId: String,
-		bodyTimer: Int,
-		dailyTimer: Int,
-		nutritionTimer: Int,
-		sleepTimer: Int,
 		result: @escaping FlutterResult
 	){
 		terra = Terra(
 			devId: devID,
-			referenceId: referenceId,
-			bodyTimer: Double(bodyTimer * 60),
-			dailyTimer: Double(dailyTimer * 60),
-			nutritionTimer: Double(nutritionTimer * 60), 
-			sleepTimer: Double(sleepTimer * 60)
-		)
-		result(true);
+            referenceId: referenceId){success in
+                result(success)
+        }
 	}
 
 	private func initConnection(
 		connection: String,
 		token: String,
 		schedulerOn: Bool,
-		permissions: [String],
 		customPermissions: [String],
 		result: @escaping FlutterResult
 	){
@@ -192,7 +181,6 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 			terra!.initConnection(
 				type: c!,
 				token: token,
-				permissions: permissionsSet(permissions: permissions),
 				customReadTypes: customPermissionsSet(customPermissions: customPermissions),
 				schedulerOn: schedulerOn
 			){(success: Bool) in result(success)}
@@ -212,7 +200,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 	) {
 		let c = connectionParse(connection: connection)
 		if c != nil && terra != nil {
-			result(terra!.getUserid(type: c!))
+			result(terra!.getUserId(type: c!))
 		} else {
 			result(FlutterError(
 				code: "Connection Type Error",
@@ -384,10 +372,6 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 					initTerra(
 						devID: args["devID"] as! String,
 						referenceId: args["referenceID"] as! String,
-						bodyTimer: args["bodyTimer"] as! Int,
-						dailyTimer: args["dailyTimer"] as! Int,
-						nutritionTimer: args["nutritionTimer"] as! Int,
-						sleepTimer: args["sleepTimer"] as! Int,
 						result: result
 					)
 					break;
@@ -401,7 +385,6 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 						connection: args["connection"] as! String,
 						token: args["token"] as! String,
 						schedulerOn: args["schedulerOn"] as! Bool,
-						permissions: args["permissions"] as! [String],
 						customPermissions: args["customPermissions"] as! [String],
 						result: result
 					)

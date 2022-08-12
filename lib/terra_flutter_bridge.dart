@@ -196,20 +196,10 @@ class TerraFlutter {
 
   static Future<bool?> initTerra(
       String devID,
-      String referenceID,
-      int bodyTimer,
-      int dailyTimer,
-      int nutritionTimer,
-      int sleepTimer,
-      int activityTimer) async {
+      String referenceID) async {
     final bool? success = await _channel.invokeMethod('initTerra', {
       "devID": devID,
       "referenceID": referenceID,
-      "bodyTimer": bodyTimer,
-      "dailyTimer": dailyTimer,
-      "nutritionTimer": nutritionTimer,
-      "sleepTimer": sleepTimer,
-      "activityTimer": activityTimer
     });
     return success;
   }
@@ -218,13 +208,11 @@ class TerraFlutter {
       Connection connection,
       String token,
       bool schedulerOn,
-      List<Permission> permissions,
       List<CustomPermission> customPermissions) async {
     final bool? success = await _channel.invokeMethod('initConnection', {
       "connection": connection.connectionString,
       "token": token,
       "schedulerOn": schedulerOn,
-      "permissions": permissions.map((p) => p.permissionString).toList(),
       "customPermissions":
           customPermissions.map((c) => c.customPermissionString).toList()
     });

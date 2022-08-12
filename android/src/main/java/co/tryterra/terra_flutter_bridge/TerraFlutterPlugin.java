@@ -25,7 +25,9 @@ import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 
 import com.google.gson.Gson;
 
-import co.tryterra.terra.*;
+import co.tryterra.terra.enums.Connections;
+import co.tryterra.terra.enums.Permissions;
+import co.tryterra.terra.Terra;
 import kotlin.Unit;
 
 /** TerraFlutterPlugin */
@@ -60,8 +62,6 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
       switch (permission){
           case "ACTIVITY":
               return Permissions.ACTIVITY;
-          case "ATHLETE":
-              return Permissions.ATHLETE;
           case "BODY":
               return Permissions.BODY;
           case "DAILY":
@@ -83,29 +83,22 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
   private void initTerra(
     String devID,
     String referenceId,
-    int sleepTimer,
-    int dailyTimer,
-    int bodyTimer,
-    int activityTimer,
-    int nutritionTimer,
     Result result
   ) {
     try{
       this.terra = new Terra(
         devID,
         Objects.requireNonNull(this.context),
-        bodyTimer * 60 * 1000,
-        sleepTimer * 60 * 1000,
-        dailyTimer * 60 * 1000,
-        nutritionTimer * 60 * 1000,
-        activityTimer * 60 * 1000,
         referenceId,
-        null
+        (success) -> {
+          result.success(success);
+          return Unit.INSTANCE;
+        }
       );
-      result.success(true);
     }
     catch(Exception e){
       result.error("Init Failure", "Could not initialise Terra", e);
+      result.success(false);
     }
   }
 
@@ -113,7 +106,6 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
     String connection,
     String token,
     Boolean schedulerOn,
-    ArrayList<String> permissions,
     ArrayList<String> customPermissions,
     Result result
   ){
@@ -122,14 +114,9 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
         return;
     }
 
-    HashSet<Permissions> perms = new HashSet<>();
-    for (String permission: permissions){
-        perms.add(parsePermissions(permission));
-    }
     this.terra.initConnection(
       Objects.requireNonNull(parseConnection(connection)),
       token, Objects.requireNonNull(this.context),
-      perms,
       schedulerOn,
       null,
       (success)-> {
@@ -266,11 +253,6 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
         initTerra(
           call.argument("devID"),
           call.argument("referenceID"),
-          call.argument("sleepTimer"),
-          call.argument("dailyTimer"),
-          call.argument("bodyTimer"),
-          call.argument("activityTimer"),
-          call.argument("nutritionTimer"),
           result
         );
         break;
@@ -279,7 +261,6 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
           call.argument("connection"),
           call.argument("token"),
           call.argument("schedulerOn"),
-          call.argument("permissions"),
           call.argument("customPermissions"),
           result
         );
