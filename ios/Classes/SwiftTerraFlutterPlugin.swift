@@ -26,40 +26,12 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 		}
     	return nil
   }
-  // permission type translate
-  private func permissionParse(permission: String) -> Permissions? {
-      switch permission {
-          case "ACTIVITY":
-              return Permissions.ACTIVITY
-          case "BODY":
-              return Permissions.BODY
-          case "DAILY":
-              return Permissions.DAILY
-          case "NUTRITION":
-              return Permissions.NUTRITION
-          case "SLEEP":
-              return Permissions.SLEEP
-          default:
-              print("Passed invalid permission")
-      }
-      return nil
-  }
 
   // test function
   private func testFunction(args: [String: Any], result: @escaping FlutterResult){
     result("Test function working in iOS, you passed text: " + (args["text"] as! String))
   }
 
-  // permissions array to permissions set
-  private func permissionsSet(permissions: [String]) -> Set<Permissions> {
-    var out: Set<Permissions> = Set([])
-    for permission in permissions {
-		if let p = permissionParse(permission: permission) {
-			out.insert(p)
-		}
-    }
-    return out
-  }
 
   // custom permissions to object
   private func customPermissionParse(cPermission: String) -> Set<HKObjectType> {

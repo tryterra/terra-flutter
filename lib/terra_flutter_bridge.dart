@@ -160,30 +160,6 @@ extension CustomPermissionExtension on CustomPermission {
   }
 }
 
-// General permissions (per Terra scope)
-enum Permission { athlete, activity, body, daily, nutrition, sleep }
-
-extension PermissionExtension on Permission {
-  String get permissionString {
-    switch (this) {
-      case Permission.activity:
-        return 'ACTIVITY';
-      case Permission.athlete:
-        return 'ATHLETE';
-      case Permission.body:
-        return 'BODY';
-      case Permission.daily:
-        return 'DAILY';
-      case Permission.nutrition:
-        return 'NUTRITION';
-      case Permission.sleep:
-        return 'SLEEP';
-      default:
-        return 'UNDEFINED';
-    }
-  }
-}
-
 // Functions bridging
 class TerraFlutter {
   static const MethodChannel _channel = MethodChannel('terra_flutter_bridge');

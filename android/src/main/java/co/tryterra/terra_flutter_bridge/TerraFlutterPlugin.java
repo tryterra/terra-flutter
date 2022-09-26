@@ -58,22 +58,6 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
     return null;
   }
 
-  private Permissions parsePermissions(String permission){
-      switch (permission){
-          case "ACTIVITY":
-              return Permissions.ACTIVITY;
-          case "BODY":
-              return Permissions.BODY;
-          case "DAILY":
-              return Permissions.DAILY;
-          case "NUTRITION":
-              return Permissions.NUTRITION;
-          case "SLEEP":
-              return Permissions.SLEEP;
-      }
-      return null;
-  }
-
   private void testFunction(String text, @NonNull Result result){
     result.success(text);
   }
