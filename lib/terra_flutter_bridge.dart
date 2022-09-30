@@ -73,6 +73,7 @@ enum CustomPermission {
   nutritionCalories,
   nutritionWater,
   nutritionCholesterol,
+  menstruation,
 }
 
 extension CustomPermissionExtension on CustomPermission {
@@ -154,6 +155,8 @@ extension CustomPermissionExtension on CustomPermission {
         return 'NUTRITION_WATER';
       case CustomPermission.nutritionCholesterol:
         return 'NUTRITION_CHOLESTEROL';
+      case CustomPermission.menstruation:
+        return 'MENSTRUATION';
       default:
         return 'UNDEFINED';
     }
@@ -230,6 +233,16 @@ class TerraFlutter {
   static Future<bool?> getDaily(
       Connection connection, DateTime startDate, DateTime endDate) async {
     final bool? success = await _channel.invokeMethod('getDaily', {
+      "connection": connection.connectionString,
+      "startDate": convertToProperIsoFormat(startDate),
+      "endDate": convertToProperIsoFormat(endDate)
+    });
+    return success;
+  }
+
+    static Future<bool?> getMenstruation(
+      Connection connection, DateTime startDate, DateTime endDate) async {
+    final bool? success = await _channel.invokeMethod('getMenstruation', {
       "connection": connection.connectionString,
       "startDate": convertToProperIsoFormat(startDate),
       "endDate": convertToProperIsoFormat(endDate)

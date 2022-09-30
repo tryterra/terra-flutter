@@ -34,95 +34,101 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 
 
   // custom permissions to object
-  private func customPermissionParse(cPermission: String) -> Set<HKObjectType> {
+  private func customPermissionParse(cPermission: String) -> CustomPermissions? {
         switch cPermission {
             case "WORKOUT_TYPES":
-                return Set([HKObjectType.workoutType()])
+                return CustomPermissions.WORKOUT_TYPE;
             case "ACTIVITY_SUMMARY":
-                return Set([HKObjectType.activitySummaryType()])
+                return CustomPermissions.ACTIVITY_SUMMARY;
             case "LOCATION":
-                return Set([HKSeriesType.workoutRoute()])
+                return CustomPermissions.LOCATION;
             case "CALORIES":
-                return Set([HKObjectType.quantityType(forIdentifier:.activeEnergyBurned)!])
+                return CustomPermissions.CALORIES;
             case "STEPS":
-                return Set([HKQuantityType.quantityType(forIdentifier: .stepCount)!])
+                return CustomPermissions.STEPS;
             case "HEART_RATE":
-                return Set([HKObjectType.quantityType(forIdentifier: .heartRate)!])
+                return CustomPermissions.HEART_RATE;
             case "HEART_RATE_VARIABILITY":
-                return Set([HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!])
+                return CustomPermissions.HEART_RATE_VARIABILITY;
             case "VO2MAX":
-                return Set([HKObjectType.quantityType(forIdentifier: .vo2Max)!])
+                return CustomPermissions.VO2MAX;
             case "HEIGHT":
-                return Set([HKObjectType.quantityType(forIdentifier: .height)!])
+                return CustomPermissions.HEIGHT;
             case "ACTIVE_DURATIONS":
-                return Set([HKObjectType.quantityType(forIdentifier: .appleExerciseTime)!])
+                return CustomPermissions.ACTIVE_DURATIONS;
             case "WEIGHT":
-                return Set([HKObjectType.quantityType(forIdentifier: .bodyMass)!])
+                return CustomPermissions.WEIGHT;
             case "FLIGHTS_CLIMBED":
-                return Set([HKObjectType.quantityType(forIdentifier: .flightsClimbed)!])
+                return CustomPermissions.FLIGHTS_CLIMBED;
             case "BMI":
-                return Set([HKObjectType.quantityType(forIdentifier: .bodyMassIndex)!])
+                return CustomPermissions.BMI;
             case "BODY_FAT":
-                return Set([HKObjectType.quantityType(forIdentifier: .bodyFatPercentage)!])
+                return CustomPermissions.BODY_FAT;
             case "EXERCISE_DISTANCE":
-                return Set([HKObjectType.quantityType(forIdentifier: .distanceSwimming)!, HKObjectType.quantityType(forIdentifier: .distanceCycling)!, HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!])
+                return CustomPermissions.EXERCISE_DISTANCE;
             case "GENDER":
-                return Set([HKObjectType.characteristicType(forIdentifier: .biologicalSex)!])
+                return CustomPermissions.GENDER;
             case "DATE_OF_BIRTH":
-                return Set([HKObjectType.characteristicType(forIdentifier: .dateOfBirth)!])
+                return CustomPermissions.DATE_OF_BIRTH;
             case "BASAL_ENERGY_BURNED":
-                return Set([HKObjectType.quantityType(forIdentifier: .basalEnergyBurned)!])
+                return CustomPermissions.BASAL_ENERGY_BURNED;
             case "SWIMMING_SUMMARY":
-                return Set([HKObjectType.quantityType(forIdentifier: .swimmingStrokeCount)!])
+                return CustomPermissions.SWIMMING_SUMMARY;
             case "RESTING_HEART_RATE":
-                return Set([HKObjectType.quantityType(forIdentifier: .restingHeartRate)!])
+                return CustomPermissions.RESTING_HEART_RATE;
             case "BLOOD_PRESSURE":
-                return Set([HKObjectType.quantityType(forIdentifier: .bloodPressureDiastolic)!, HKObjectType.quantityType(forIdentifier: .bloodPressureSystolic)!])
+                return CustomPermissions.BLOOD_PRESSURE;
             case "BLOOD_GLUCOSE":
-                return Set([HKObjectType.quantityType(forIdentifier: .bloodGlucose)!])
+                return CustomPermissions.BLOOD_GLUCOSE;
             case "BODY_TEMPERATURE":
-                return Set([HKObjectType.quantityType(forIdentifier: .bodyTemperature)!])
+                return CustomPermissions.BODY_TEMPERATURE;
+            case "MINDFULNESS":
+                return CustomPermissions.MINDFULNESS;
             case "LEAN_BODY_MASS":
-                return Set([HKObjectType.quantityType(forIdentifier: .leanBodyMass)!])
+                return CustomPermissions.LEAN_BODY_MASS;
             case "OXYGEN_SATURATION":
-                return Set([HKObjectType.quantityType(forIdentifier: .oxygenSaturation)!])
+                return CustomPermissions.OXYGEN_SATURATION;
             case "SLEEP_ANALYSIS":
-                return Set([HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!])
+                return CustomPermissions.SLEEP_ANALYSIS;
             case "RESPIRATORY_RATE":
-                return Set([HKObjectType.quantityType(forIdentifier: .respiratoryRate)!])
+                return CustomPermissions.RESPIRATORY_RATE;
             case "NUTRITION_SODIUM":
-                return Set([HKObjectType.quantityType(forIdentifier: .dietarySodium)!])
+                return CustomPermissions.NUTRITION_SODIUM;
             case "NUTRITION_PROTEIN":
-                return Set([HKObjectType.quantityType(forIdentifier: .dietaryProtein)!])
+                return CustomPermissions.NUTRITION_PROTEIN;
             case "NUTRITION_CARBOHYDRATES":
-                return Set([HKObjectType.quantityType(forIdentifier: .dietaryCarbohydrates)!])
+                return CustomPermissions.NUTRITION_CARBOHYDRATES;
             case "NUTRITION_FIBRE":
-                return Set([HKObjectType.quantityType(forIdentifier: .dietaryFiber)!])
+                return CustomPermissions.NUTRITION_FIBRE;
             case "NUTRITION_FAT_TOTAL":
-                return Set([HKObjectType.quantityType(forIdentifier: .dietaryFatTotal)!])
+                return CustomPermissions.NUTRITION_FAT_TOTAL;
             case "NUTRITION_SUGAR":
-                return Set([HKObjectType.quantityType(forIdentifier: .dietarySugar)!])
+                return CustomPermissions.NUTRITION_SUGAR;
             case "NUTRITION_VITAMIN_C":
-                return Set([HKObjectType.quantityType(forIdentifier: .dietaryVitaminC)!])
+                return CustomPermissions.NUTRITION_VITAMIN_C;
             case "NUTRITION_VITAMIN_A":
-                return Set([HKObjectType.quantityType(forIdentifier: .dietaryVitaminA)!])
+                return CustomPermissions.NUTRITION_VITAMIN_A;
             case "NUTRITION_CALORIES":
-                return Set([HKObjectType.quantityType(forIdentifier: .dietaryEnergyConsumed)!])
+                return CustomPermissions.NUTRITION_CALORIES;
             case "NUTRITION_WATER":
-                return Set([HKObjectType.quantityType(forIdentifier: .dietaryWater)!])
+                return CustomPermissions.NUTRITION_WATER;
             case "NUTRITION_CHOLESTEROL":
-                return Set([HKObjectType.quantityType(forIdentifier: .dietaryCholesterol)!])
+                return CustomPermissions.NUTRITION_CHOLESTEROL;
+            case "MENSTRUATION":
+                return CustomPermissions.MENSTRUATION;
             default:
-                return Set([])
+                return nil
         }
-        return Set([])
+        return nil
     }
 
-	private func customPermissionsSet(customPermissions: [String]) -> Set<HKObjectType> {
-        var out: Set<HKObjectType> = Set([])
+	private func customPermissionsSet(customPermissions: [String]) -> Set<CustomPermissions> {
+        var out: Set<CustomPermissions> = Set([])
 
         for permission in customPermissions {
-            out.formUnion(customPermissionParse(cPermission: permission))
+            if let perm = customPermissionParse(cPermission: permission){
+                out.insert(perm)
+            }
         }
 
         return out
@@ -195,7 +201,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 				type: c!,
 				startDate: startDate,
 				endDate: endDate
-			){(success: Bool, data: [TerraBodyData]?) in result(success)}
+			){(success: Bool) in result(success)}
 		} else {
 			result(FlutterError(
 				code: "Connection Type Error",
@@ -216,7 +222,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 				type: c!,
 				startDate: startDate,
 				endDate: endDate
-			){(success: Bool, data: [TerraActivityData]?) in result(success)}
+			){(success: Bool) in result(success)}
 		} else {
 			result(FlutterError(
 				code: "Connection Type Error",
@@ -225,12 +231,35 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 			))
 		}
 	}
+
+	private func getMenstruation(
+		connection: String,
+		startDate: Date,
+		endDate: Date,
+		result: @escaping FlutterResult
+	) {
+		let c = connectionParse(connection: connection)
+		if c != nil && terra != nil {
+			terra!.getMenstruation(
+				type: c!,
+				startDate: startDate,
+				endDate: endDate
+			){(success: Bool) in result(success)}
+		} else {
+			result(FlutterError(
+				code: "Connection Type Error",
+				message: "Could not call getter for type: activity. make sure you are passing a valid iOS connection and that terra is initialised by calling initTerra",
+				details: nil
+			))
+		}
+	}
+
 	private func getAthlete(connection: String, result: @escaping FlutterResult){
 		let c = connectionParse(connection: connection)
 		if c != nil && terra != nil {
 			terra!.getAthlete(
 				type: c!
-			){(success: Bool, data: TerraAthleteData?) in result(success)}
+			){(success: Bool) in result(success)}
 		} else {
 			result(FlutterError(
 				code: "Connection Type Error",
@@ -251,7 +280,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 				type: c!,
 				startDate: startDate,
 				endDate: endDate
-			){(success: Bool, data: [TerraDailyData]?) in result(success)}
+			){(success: Bool) in result(success)}
 		} else {
 			result(FlutterError(
 				code: "Connection Type Error",
@@ -272,7 +301,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 				type: c!,
 				startDate: startDate,
 				endDate: endDate
-			){(success: Bool, data: [TerraNutritionData]?) in result(success)}
+			){(success: Bool) in result(success)}
 		} else {
 			result(FlutterError(
 				code: "Connection Type Error",
@@ -293,7 +322,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 				type: c!,
 				startDate: startDate,
 				endDate: endDate
-			){(success: Bool, data: [TerraSleepData]?) in result(success)}
+			){(success: Bool) in result(success)}
 		} else {
 			result(FlutterError(
 				code: "Connection Type Error",
@@ -400,6 +429,14 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 					break;
 				case "getActivity":
 					getActivity(
+						connection: args["connection"] as! String,
+						startDate: dateFormatter.date(from: args["startDate"] as! String)!,
+						endDate: dateFormatter.date(from: args["endDate"] as! String)!,
+						result: result
+					)
+					break;
+				case "getMenstruation":
+					getMenstruation(
 						connection: args["connection"] as! String,
 						startDate: dateFormatter.date(from: args["startDate"] as! String)!,
 						endDate: dateFormatter.date(from: args["endDate"] as! String)!,

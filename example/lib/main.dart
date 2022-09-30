@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
     bool connected = false;
     bool daily = false;
     String testText;
-    Connection c = Connection.appleHealth;
+    Connection c = Connection.samsung;
     // Function messages may fail, so we use a try/catch Exception.
     // We also handle the message potentially returning null.
     // USE YOUR OWN CATCH BLOCKS
@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp> {
       DateTime now = DateTime.now().toUtc();
       DateTime lastMidnight = DateTime(now.year, now.month, now.day);
       initialised =
-          await TerraFlutter.initTerra("Dev ID", "refID") ??
+          await TerraFlutter.initTerra("devID", "refID") ??
               false;
       connected = await TerraFlutter.initConnection(c, "TOKEN", false, []) ??
           false;
@@ -50,8 +50,8 @@ class _MyAppState extends State<MyApp> {
               c, lastMidnight, now) ??
           false;
       daily = await TerraFlutter.getAthlete(c) ?? false;
-      daily = await TerraFlutter.getBody(
-              c, DateTime(2022, 7, 25), DateTime(2022, 7, 26)) ??
+      daily = await TerraFlutter.getMenstruation(
+              c, DateTime(2022, 9, 25), DateTime(2022, 9, 30)) ??
           false;
       daily = await TerraFlutter.getNutrition(
               c, DateTime(2022, 7, 25), DateTime(2022, 7, 26)) ??
