@@ -40,8 +40,8 @@ class _MyAppState extends State<MyApp> {
       DateTime now = DateTime.now().toUtc();
       DateTime lastMidnight = DateTime(now.year, now.month, now.day);
       initialised =
-          await TerraFlutter.initTerra("devID", "refID") ??
-              false;
+      await TerraFlutter.initTerra("DEVID", "refID") ??
+          false;
       connected = await TerraFlutter.initConnection(c, "TOKEN", false, []) ??
           false;
 
