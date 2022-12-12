@@ -186,9 +186,13 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
     HashSet<CustomPermissions> cPermissions = new HashSet<>();
     for (Object customPermission: customPermissions){
         if (customPermission == null){
-            continue;
+          continue;
         }
-        cPermissions.add(parseCustomPermission((String) customPermission));
+        CustomPermissions cPermission = parseCustomPermission((String) customPermission);
+        if (cPermission == null){
+          continue;
+        }
+        cPermissions.add(cPermission);
     }
 
     this.terra.initConnection(
