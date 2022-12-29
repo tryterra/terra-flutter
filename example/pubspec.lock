@@ -145,10 +145,10 @@ packages:
   terra_flutter_bridge:
     dependency: "direct main"
     description:
-      name: terra_flutter_bridge
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.1"
+      path: ".."
+      relative: true
+    source: path
+    version: "0.3.2"
   test_api:
     dependency: transitive
     description:

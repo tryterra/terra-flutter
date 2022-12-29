@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
     bool connected = false;
     bool daily = false;
     String testText;
-    Connection c = Connection.samsung;
+    Connection c = Connection.appleHealth;
     // Function messages may fail, so we use a try/catch Exception.
     // We also handle the message potentially returning null.
     // USE YOUR OWN CATCH BLOCKS
@@ -39,13 +39,14 @@ class _MyAppState extends State<MyApp> {
     try {
       DateTime now = DateTime.now().toUtc();
       DateTime lastMidnight = DateTime(now.year, now.month, now.day);
-      initialised = await TerraFlutter.initTerra("Dev-ID", "refId") ??
+      initialised = await TerraFlutter.initTerra("DEVID", "refId") ??
           false;
       print(initialised);
       connected = await TerraFlutter.initConnection(c, "TOKEN", false, []) ??
           false;
 
       testText = await TerraFlutter.getUserId(c) ?? "1234";
+      print(testText);
       daily = await TerraFlutter.getDaily(
               c, lastMidnight, now) ??
           false;
@@ -63,7 +64,7 @@ class _MyAppState extends State<MyApp> {
               c, DateTime(2022, 7, 25), DateTime(2022, 7, 26)) ??
           false;
     } on Exception catch (e) {
-      // print('error caught: $e');
+      print('error caught: $e');
       testText = "Some exception went wrong";
       initialised = false;
       connected = false;

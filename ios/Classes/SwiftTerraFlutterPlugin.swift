@@ -346,12 +346,14 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 	}
 
 	func activateGlucoseSensor(result: @escaping FlutterResult){
-		do {
-            try terra?.activateSensor()
-            result(true)
-        }
-        catch {
-            result(false)
+		terra?.activateSensor{(details) in
+            do {
+                let jsonData = try JSONEncoder().encode(details)
+                result(String(data: jsonData, encoding: .utf8) ?? "")
+            }
+            catch {
+                result(nil)
+            }
         }
 	}
 
@@ -360,11 +362,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 	public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
 		let dateFormatter = ISO8601DateFormatter()
 		dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-		guard let args_op = call.arguments else {
-			result("ERROR")
-			return
-		}
-		let args = args_op as! [String: Any]
+		let args = call.arguments as? [String: Any] ?? [:]
 		switch call.method {
 				case "testFunction":
 					testFunction(args: args, result: result)

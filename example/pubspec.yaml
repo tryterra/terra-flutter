@@ -18,7 +18,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  terra_flutter_bridge: ^0.3.2
+  terra_flutter_bridge: 
+    path: ../
     # When depending on this package from a real application you should use:
     #   terra_flutter: ^x.y.z
     # See https://dart.dev/tools/pub/dependencies#version-constraints

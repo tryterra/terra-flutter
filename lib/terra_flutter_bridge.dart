@@ -270,8 +270,8 @@ class TerraFlutter {
     return success;
   }
 
-  static Future<bool?> activateGlucoseSensor() async {
-    final bool? success = await _channel.invokeMethod('activateGlucoseSensor');
+  static Future<String?> activateGlucoseSensor() async {
+    final String? success = await _channel.invokeMethod('activateGlucoseSensor');
     return success;
   }
 
