@@ -12,7 +12,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
   }
 
   // terra instance managed
-  private var terra: Terra?
+  private var terra: TerraManager?
   
   // connection type translate
   private func connectionParse(connection: String) -> Connections? {
@@ -26,6 +26,31 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 		}
     	return nil
   }
+
+  private func errorMessage(_ err: TerraError) -> String{
+        switch(err){
+            case .HealthKitUnavailable: return "Health Kit Unavailable"
+            case .ServiceUnavailable: return "Service Unavailable"
+            case .Unauthenticated: return "Unauthenticated"
+            case .InvalidUserID: return "Invalid User ID"
+            case .InvalidDevID: return "Invalid Dev ID"
+            case .Forbidden: return "Forbidden"
+            case .BadRequest: return "Bad Request"
+            case .UnknownOpcode: return "Unknown Op Code"
+            case .UnexpectedError: return "Unexpected Error"
+            case .NFCError: return "NFC Error"
+            case .SensorExpired: return "Sensor Expired"
+            case .SensorReadingFailed: return "Sensor Reading Failed"
+            case .NoInternet: return "No Internet"
+            case .UserLimitsReached: return "User Limit Reached"
+            case .IncorrectDevId: return "Incorrect Dev ID"
+            case .InvalidToken: return "Invalid Token"
+            case .HealthKitAuthorizationError: return "Health Kit Authorization Error"
+            case .UnsupportedResource: return "Unsupported Resource"
+            default: "Unknown Error Type. Please contact dev@tryterra.co"
+        }
+        return ""
+    } 
 
   // test function
   private func testFunction(args: [String: Any], result: @escaping FlutterResult){
@@ -140,10 +165,14 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 		referenceId: String,
 		result: @escaping FlutterResult
 	){
-		terra = Terra(
-			devId: devID,
-            referenceId: referenceId){success in
-                result(success)
+		Terra.instance(devId: devID, referenceId: referenceId){instance, error in
+            if let error = error{
+                result(["success": false, "error": self.errorMessage(error)])
+            }
+            else{
+                self.terra = instance
+                result(["success": true])
+            }
         }
 	}
 
@@ -160,8 +189,16 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 				type: c!,
 				token: token,
 				customReadTypes: customPermissionsSet(customPermissions: customPermissions),
-				schedulerOn: schedulerOn
-			){(success: Bool) in result(success)}
+				schedulerOn: schedulerOn,
+				completion: {success, error in
+                    if let error = error{
+                        result(["success": success, "error": self.errorMessage(error)])
+                    }
+                    else{
+                        result(["success": success])
+                    }
+				}
+			)
 		}
 		else {
 			result(FlutterError(
@@ -178,7 +215,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 	) {
 		let c = connectionParse(connection: connection)
 		if c != nil && terra != nil {
-			result(terra!.getUserId(type: c!))
+            result(["success": true, "userId": terra?.getUserId(type: c!)])
 		} else {
 			result(FlutterError(
 				code: "Connection Type Error",
@@ -193,6 +230,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 		connection: String,
 		startDate: Date,
 		endDate: Date,
+		toWebhook: Bool,
 		result: @escaping FlutterResult
 	) {
 		let c = connectionParse(connection: connection)
@@ -200,8 +238,23 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 			terra!.getBody(
 				type: c!,
 				startDate: startDate,
-				endDate: endDate
-			){(success: Bool) in result(success)}
+				endDate: endDate,
+				toWebhook: toWebhook
+			){
+				(success, data, err) in 
+                if let err = err {
+                    result(["success": false, "data": nil, "error": self.errorMessage(err)])
+                }
+                else{
+                    do {
+                        let jsonData = try JSONEncoder().encode(data)
+                        result(["success": success, "data": String(data: jsonData, encoding: .utf8) ?? ""])
+                    }
+                    catch {
+                        result(["success": success, "error": "Error decoding data into correct format"])
+                    }
+                }
+			}
 		} else {
 			result(FlutterError(
 				code: "Connection Type Error",
@@ -214,6 +267,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 		connection: String,
 		startDate: Date,
 		endDate: Date,
+		toWebhook: Bool,
 		result: @escaping FlutterResult
 	) {
 		let c = connectionParse(connection: connection)
@@ -221,8 +275,23 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 			terra!.getActivity(
 				type: c!,
 				startDate: startDate,
-				endDate: endDate
-			){(success: Bool) in result(success)}
+				endDate: endDate,
+				toWebhook: toWebhook
+			){
+				(success, data, err) in 
+                if let err = err {
+                    result(["success": false, "data": nil, "error": self.errorMessage(err)])
+                }
+                else{
+                    do {
+                        let jsonData = try JSONEncoder().encode(data)
+                        result(["success": success, "data": String(data: jsonData, encoding: .utf8) ?? ""])
+                    }
+                    catch {
+                        result(["success": success, "error": "Error decoding data into correct format"])
+                    }
+                }
+			}
 		} else {
 			result(FlutterError(
 				code: "Connection Type Error",
@@ -236,6 +305,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 		connection: String,
 		startDate: Date,
 		endDate: Date,
+		toWebhook: Bool,
 		result: @escaping FlutterResult
 	) {
 		let c = connectionParse(connection: connection)
@@ -243,8 +313,23 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 			terra!.getMenstruation(
 				type: c!,
 				startDate: startDate,
-				endDate: endDate
-			){(success: Bool) in result(success)}
+				endDate: endDate,
+				toWebhook: toWebhook
+			){
+				(success, data, err) in 
+                if let err = err {
+                    result(["success": false, "data": nil, "error": self.errorMessage(err)])
+                }
+                else{
+                    do {
+                        let jsonData = try JSONEncoder().encode(data)
+                        result(["success": success, "data": String(data: jsonData, encoding: .utf8) ?? ""])
+                    }
+                    catch {
+                        result(["success": success, "error": "Error decoding data into correct format"])
+                    }
+                }
+			}
 		} else {
 			result(FlutterError(
 				code: "Connection Type Error",
@@ -254,12 +339,27 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 		}
 	}
 
-	private func getAthlete(connection: String, result: @escaping FlutterResult){
+	private func getAthlete(connection: String, toWebhook: Bool, result: @escaping FlutterResult){
 		let c = connectionParse(connection: connection)
 		if c != nil && terra != nil {
 			terra!.getAthlete(
-				type: c!
-			){(success: Bool) in result(success)}
+				type: c!,
+				toWebhook: toWebhook
+			){
+				(success, data, err) in 
+                if let err = err {
+                    result(["success": false, "data": nil, "error": self.errorMessage(err)])
+                }
+                else{
+                    do {
+                        let jsonData = try JSONEncoder().encode(data)
+                        result(["success": success, "data": String(data: jsonData, encoding: .utf8) ?? ""])
+                    }
+                    catch {
+                        result(["success": success, "error": "Error decoding data into correct format"])
+                    }
+                }
+			}
 		} else {
 			result(FlutterError(
 				code: "Connection Type Error",
@@ -272,6 +372,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 		connection: String,
 		startDate: Date,
 		endDate: Date,
+		toWebhook: Bool,
 		result: @escaping FlutterResult
 	) {
 		let c = connectionParse(connection: connection)
@@ -279,8 +380,23 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 			terra!.getDaily(
 				type: c!,
 				startDate: startDate,
-				endDate: endDate
-			){(success: Bool) in result(success)}
+				endDate: endDate,
+				toWebhook: toWebhook
+			){
+				(success, data, err) in 
+                if let err = err {
+                    result(["success": false, "data": nil, "error": self.errorMessage(err)])
+                }
+                else{
+                    do {
+                        let jsonData = try JSONEncoder().encode(data)
+                        result(["success": success, "data": String(data: jsonData, encoding: .utf8) ?? ""])
+                    }
+                    catch {
+                        result(["success": success, "error": "Error decoding data into correct format"])
+                    }
+                }
+			}
 		} else {
 			result(FlutterError(
 				code: "Connection Type Error",
@@ -293,6 +409,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 		connection: String,
 		startDate: Date,
 		endDate: Date,
+		toWebhook: Bool,
 		result: @escaping FlutterResult
 	) {
 		let c = connectionParse(connection: connection)
@@ -300,8 +417,23 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 			terra!.getNutrition(
 				type: c!,
 				startDate: startDate,
-				endDate: endDate
-			){(success: Bool) in result(success)}
+				endDate: endDate,
+				toWebhook: toWebhook
+			){
+				(success, data, err) in 
+                if let err = err {
+                    result(["success": false, "data": nil, "error": self.errorMessage(err)])
+                }
+                else{
+                    do {
+                        let jsonData = try JSONEncoder().encode(data)
+                        result(["success": success, "data": String(data: jsonData, encoding: .utf8) ?? ""])
+                    }
+                    catch {
+                        result(["success": success, "error": "Error decoding data into correct format"])
+                    }
+                }
+			}
 		} else {
 			result(FlutterError(
 				code: "Connection Type Error",
@@ -314,6 +446,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 		connection: String,
 		startDate: Date,
 		endDate: Date,
+		toWebhook: Bool,
 		result: @escaping FlutterResult
 	) {
 		let c = connectionParse(connection: connection)
@@ -321,8 +454,23 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 			terra!.getSleep(
 				type: c!,
 				startDate: startDate,
-				endDate: endDate
-			){(success: Bool) in result(success)}
+				endDate: endDate,
+				toWebhook: toWebhook
+			){
+				(success, data, err) in 
+                if let err = err {
+                    result(["success": false, "data": nil, "error": self.errorMessage(err)])
+                }
+                else{
+                    do {
+                        let jsonData = try JSONEncoder().encode(data)
+                        result(["success": success, "data": String(data: jsonData, encoding: .utf8) ?? ""])
+                    }
+                    catch {
+                        result(["success": success, "error": "Error decoding data into correct format"])
+                    }
+                }
+			}
 		} else {
 			result(FlutterError(
 				code: "Connection Type Error",
@@ -392,6 +540,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 						connection: args["connection"] as! String,
 						startDate: dateFormatter.date(from: args["startDate"] as! String)!,
 						endDate: dateFormatter.date(from: args["endDate"] as! String)!,
+						toWebhook: args["toWebhook"] as! Bool,
 						result: result
 					)
 					break;
@@ -400,6 +549,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 						connection: args["connection"] as! String,
 						startDate: dateFormatter.date(from: args["startDate"] as! String)!,
 						endDate: dateFormatter.date(from: args["endDate"] as! String)!,
+						toWebhook: args["toWebhook"] as! Bool,
 						result: result
 					)
 					break;
@@ -408,12 +558,14 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 						connection: args["connection"] as! String,
 						startDate: dateFormatter.date(from: args["startDate"] as! String)!,
 						endDate: dateFormatter.date(from: args["endDate"] as! String)!,
+						toWebhook: args["toWebhook"] as! Bool,
 						result: result
 					)
 					break;
 				case "getAthlete":
 					getAthlete(
 						connection: args["connection"] as! String,
+						toWebhook: args["toWebhook"] as! Bool,
 						result: result
 					)
 					break;
@@ -422,6 +574,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 						connection: args["connection"] as! String,
 						startDate: dateFormatter.date(from: args["startDate"] as! String)!,
 						endDate: dateFormatter.date(from: args["endDate"] as! String)!,
+						toWebhook: args["toWebhook"] as! Bool,
 						result: result
 					)
 					break;
@@ -430,6 +583,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 						connection: args["connection"] as! String,
 						startDate: dateFormatter.date(from: args["startDate"] as! String)!,
 						endDate: dateFormatter.date(from: args["endDate"] as! String)!,
+						toWebhook: args["toWebhook"] as! Bool,
 						result: result
 					)
 					break;
@@ -438,6 +592,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 						connection: args["connection"] as! String,
 						startDate: dateFormatter.date(from: args["startDate"] as! String)!,
 						endDate: dateFormatter.date(from: args["endDate"] as! String)!,
+						toWebhook: args["toWebhook"] as! Bool,
 						result: result
 					)
 					break;

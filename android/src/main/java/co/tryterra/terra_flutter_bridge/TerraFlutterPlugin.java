@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.HashMap;
 import java.util.function.Function;
 import java.util.Date;
 
@@ -28,6 +29,7 @@ import com.google.gson.Gson;
 import co.tryterra.terra.enums.Connections;
 import co.tryterra.terra.enums.CustomPermissions;
 import co.tryterra.terra.Terra;
+import co.tryterra.terra.TerraManager;
 import kotlin.Unit;
 
 /** TerraFlutterPlugin */
@@ -43,7 +45,7 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
 
   private Gson gson = new Gson();
 
-  public Terra terra;
+  public TerraManager terra;
 
   // parsing
   private Connections parseConnection(String connection){
@@ -154,21 +156,20 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
     String referenceId,
     Result result
   ) {
-    try{
-      this.terra = new Terra(
-        devID,
-        Objects.requireNonNull(this.context),
-        referenceId,
-        (success) -> {
-          result.success(success);
+    Terra.Companion.instance(
+      devID,
+      referenceId,
+      Objects.requireNonNull(this.context),
+      (terraManager, error) ->{
+          this.terra = terraManager;
+          HashMap<String, Object> map = new HashMap<>();
+          map.put("success", true);
+          if (error != null){
+            map.put("error", error.getMessage());
+          }
+          result.success(map);
           return Unit.INSTANCE;
-        }
-      );
-    }
-    catch(Exception e){
-      result.error("Init Failure", "Could not initialise Terra", e);
-      result.success(false);
-    }
+      });
   }
 
   private void initConnection(
@@ -201,84 +202,120 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
       cPermissions,
       schedulerOn,
       null,
-      (success)-> {
-        result.success(success);
+      (success, error)-> {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("success", true);
+        if (error != null){
+          map.put("error", error.getMessage());
+        }
+        result.success(map);
         return Unit.INSTANCE;
-      });
+    });
   }
 
   private void getUserId(String connection, Result result){
-    try {
-      result.success(terra.getUserId(
-        Objects.requireNonNull(parseConnection(connection))
-      ));
-    }
-    catch(Exception e) {
-      result.error("Getter Failure", "Could not get user id", e);
-    }
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("success", true);
+    map.put("userId", terra.getUserId(Objects.requireNonNull(parseConnection(connection))));
+    result.success(map);
   }
 
-  // getters
-  private void getAthlete(String connection, Result result){
-    this.terra.getAthlete(
-      Objects.requireNonNull(parseConnection(connection)),
-      (success) -> {
-        result.success(success);
-        return Unit.INSTANCE;
-      }
-    );
-  }
-  private void getActivity(String connection, Date startDate, Date endDate, Result result){
+  private void getActivity(String connection, Date startDate, Date endDate, boolean toWebhook, Result result){
     this.terra.getActivity(
       Objects.requireNonNull(parseConnection(connection)),
       startDate,
       endDate,
-      (success) -> {
-        result.success(success);
+      toWebhook,
+      (success, data, error) -> {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("success", success);
+        if (data != null){
+            map.put("data", gson.toJson(data));
+        }            
+        if (error != null){
+            map.put("error", error.getMessage());
+        }
+        result.success(map);
         return Unit.INSTANCE;
       }
     );
   }
-  private void getBody(String connection, Date startDate, Date endDate, Result result){
+  private void getBody(String connection, Date startDate, Date endDate, boolean toWebhook, Result result){
     this.terra.getBody(
       Objects.requireNonNull(parseConnection(connection)),
       startDate,
       endDate,
-      (success) -> {
-        result.success(success);
+      toWebhook,
+      (success, data, error) -> {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("success", success);
+        if (data != null){
+            map.put("data", gson.toJson(data));
+        }            
+        if (error != null){
+            map.put("error", error.getMessage());
+        }
+        result.success(map);
         return Unit.INSTANCE;
       }
     );
   }
-  private void getDaily(String connection, Date startDate, Date endDate, Result result){
+  private void getDaily(String connection, Date startDate, Date endDate, boolean toWebhook, Result result){
     this.terra.getDaily(
       Objects.requireNonNull(parseConnection(connection)),
       startDate,
       endDate,
-      (success) -> {
-        result.success(success);
+      toWebhook,
+      (success, data, error) -> {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("success", success);
+        if (data != null){
+            map.put("data", gson.toJson(data));
+        }            
+        if (error != null){
+            map.put("error", error.getMessage());
+        }
+        result.success(map);
         return Unit.INSTANCE;
       }
     );
   }
-  private void getNutrition(String connection, Date startDate, Date endDate, Result result){
+  private void getNutrition(String connection, Date startDate, Date endDate, boolean toWebhook, Result result){
     this.terra.getNutrition(
       Objects.requireNonNull(parseConnection(connection)),
       startDate,
       endDate,
-      (success) -> {
-        result.success(success);
+      toWebhook,
+      (success, data, error) -> {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("success", success);
+        if (data != null){
+            map.put("data", gson.toJson(data));
+        }            
+        if (error != null){
+            map.put("error", error.getMessage());
+        }
+        result.success(map);
         return Unit.INSTANCE;
       }
     );
   }
-  private void getSleep(String connection, Date startDate, Date endDate, Result result){
+  private void getSleep(String connection, Date startDate, Date endDate, boolean toWebhook, Result result){
     this.terra.getSleep(
       Objects.requireNonNull(parseConnection(connection)),
       startDate,
       endDate,
-      (success) -> {
-        result.success(success);
+      toWebhook,
+      (success, data, error) -> {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("success", success);
+        if (data != null){
+            map.put("data", gson.toJson(data));
+        }            
+        if (error != null){
+            map.put("error", error.getMessage());
+        }
+        result.success(map);
         return Unit.INSTANCE;
       }
     );
@@ -295,6 +332,10 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
     catch(Exception e){
       result.error("Sensor Activation Failure", "Could not activate freestyle sensor", e);
     }
+  }
+
+  private void isHealthConnectAvailable(Result result){
+    result.success(Terra.Companion.isHealthConnectAvailable(this.context));
   }
 
   @Override
@@ -352,6 +393,7 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
           call.argument("connection"),
           Date.from(Instant.parse(call.argument("startDate"))),
           Date.from(Instant.parse(call.argument("endDate"))),
+          call.argument("toWebhook"),
           result
         );
         break;
@@ -360,6 +402,7 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
           call.argument("connection"),
           Date.from(Instant.parse(call.argument("startDate"))),
           Date.from(Instant.parse(call.argument("endDate"))),
+          call.argument("toWebhook"),
           result
         );
         break;
@@ -368,6 +411,7 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
           call.argument("connection"),
           Date.from(Instant.parse(call.argument("startDate"))),
           Date.from(Instant.parse(call.argument("endDate"))),
+          call.argument("toWebhook"),
           result
         );
         break;
@@ -376,6 +420,7 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
           call.argument("connection"),
           Date.from(Instant.parse(call.argument("startDate"))),
           Date.from(Instant.parse(call.argument("endDate"))),
+          call.argument("toWebhook"),
           result
         );
         break;
@@ -384,14 +429,12 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
           call.argument("connection"),
           Date.from(Instant.parse(call.argument("startDate"))),
           Date.from(Instant.parse(call.argument("endDate"))),
+          call.argument("toWebhook"),
           result
         );
         break;
       case "getAthlete":
-        getAthlete(
-          call.argument("connection"),
-          result
-        );
+        result.notImplemented();
         break;
       case "readGlucoseData":
         readGlucoseData(
@@ -401,6 +444,11 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
       case "getUserId":
         getUserId(
           call.argument("connection"), 
+          result
+        );
+        break;
+      case "isHealthConnectAvailable":
+        isHealthConnectAvailable(
           result
         );
         break;

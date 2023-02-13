@@ -17,7 +17,7 @@ class _MyAppState extends State<MyApp> {
   String _testText = "Hello World";
   bool _initialised = false;
   bool _connected = false;
-  bool _daily = false;
+  DataMessage? daily;
 
   @override
   void initState() {
@@ -27,10 +27,9 @@ class _MyAppState extends State<MyApp> {
 
   // Function messages are asynchronous, so we initialize in an async method.
   Future<void> initTerraFunctionState() async {
-    bool initialised = false;
-    bool connected = false;
-    bool daily = false;
-    String testText;
+    SuccessMessage? initialised;
+    SuccessMessage? connected;
+    UserId? testText;
     Connection c = Connection.appleHealth;
     // Function messages may fail, so we use a try/catch Exception.
     // We also handle the message potentially returning null.
@@ -39,36 +38,26 @@ class _MyAppState extends State<MyApp> {
     try {
       DateTime now = DateTime.now().toUtc();
       DateTime lastMidnight = DateTime(now.year, now.month, now.day);
-      initialised = await TerraFlutter.initTerra("DEVID", "refId") ??
-          false;
-      print(initialised);
-      connected = await TerraFlutter.initConnection(c, "TOKEN", false, []) ??
-          false;
+      initialised = await TerraFlutter.initTerra("DEVID", "refId");
+      print(initialised?.success);
+      connected = await TerraFlutter.initConnection(c, "TOKEN", false, []);
 
-      testText = await TerraFlutter.getUserId(c) ?? "1234";
-      print(testText);
+      testText = await TerraFlutter.getUserId(c);
+      print(testText?.userId);
       daily = await TerraFlutter.getDaily(
-              c, lastMidnight, now) ??
-          false;
-      daily = await TerraFlutter.getAthlete(c) ?? false;
-      daily = await TerraFlutter.getMenstruation(
-              c, DateTime(2022, 9, 25), DateTime(2022, 9, 30)) ??
-          false;
+              c, lastMidnight, now);
+      // daily = await TerraFlutter.getAthlete(c);
+      // daily = await TerraFlutter.getMenstruation(
+      //         c, DateTime(2023, 02, 01), DateTime(2023, 02, 10), toWebhook: false);
       daily = await TerraFlutter.getNutrition(
-              c, DateTime(2022, 7, 25), DateTime(2022, 7, 26)) ??
-          false;
+              c, DateTime(2023, 02, 01), DateTime(2023, 02, 10));
       daily = await TerraFlutter.getSleep(
-              c, now.subtract(Duration(days: 1)), now) ??
-          false;
+              c, DateTime(2023, 02, 01), DateTime(2023, 02, 10));
       daily = await TerraFlutter.getActivity(
-              c, DateTime(2022, 7, 25), DateTime(2022, 7, 26)) ??
-          false;
+              c, DateTime(2023, 02, 01), DateTime(2023, 02, 03), toWebhook: false);
+      print(await TerraFlutter.isHealthConnectAvailable());
     } on Exception catch (e) {
       print('error caught: $e');
-      testText = "Some exception went wrong";
-      initialised = false;
-      connected = false;
-      daily = false;
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -77,10 +66,9 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     setState(() {
-      _initialised = initialised;
-      _connected = connected;
-      _daily = daily;
-      _testText = testText;
+      _initialised = initialised?.success ?? false;
+      _connected = connected?.success ?? false;
+      _testText = testText?.userId ?? "";
     });
   }
 
@@ -107,7 +95,7 @@ class _MyAppState extends State<MyApp> {
                 textAlign: TextAlign.center,
               ),
               Text(
-                'Requested daily webhook for integration: $_daily\n',
+                'Requested daily webhook for integration: $daily\n',
                 textAlign: TextAlign.center,
               ),
             ],

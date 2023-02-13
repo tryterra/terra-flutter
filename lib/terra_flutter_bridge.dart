@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -163,6 +164,41 @@ extension CustomPermissionExtension on CustomPermission {
   }
 }
 
+class SuccessMessage{
+  final bool? success;
+  final String? error;
+
+  SuccessMessage(this.success, this.error);
+
+  SuccessMessage.fromJson(Map<String, dynamic> json)
+    : success = json["success"],
+    error = json.containsKey('error') ? (json['error']) : null;
+}
+
+class UserId{
+  final bool? success;
+  final String? userId;
+
+  UserId(this.success, this.userId);
+
+  UserId.fromJson(Map<String, dynamic> json)
+    : success = json["success"],
+    userId = json.containsKey('userId') ? (json['userId']) : null;
+}
+
+class DataMessage{
+  final bool? success;
+  final Map<String, dynamic>? data;
+  final String? error;
+
+  DataMessage(this.success, this.data, this.error);
+
+  DataMessage.fromJson(Map<String, dynamic> json)
+    : success = json["success"],
+    data = json.containsKey("data") && json["data"] != null ? (jsonDecode(json["data"])) : null,
+    error = json.containsKey('error') ? (json['error']) : null;
+}
+
 // Functions bridging
 class TerraFlutter {
   static const MethodChannel _channel = MethodChannel('terra_flutter_bridge');
@@ -173,101 +209,100 @@ class TerraFlutter {
     return version;
   }
 
-  static Future<bool?> initTerra(
+  static Future<SuccessMessage?> initTerra(
       String devID,
       String referenceID) async {
-    final bool? success = await _channel.invokeMethod('initTerra', {
+    return SuccessMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('initTerra', {
       "devID": devID,
       "referenceID": referenceID,
-    });
-    return success;
+    })));
   }
 
-  static Future<bool?> initConnection(
+  static Future<SuccessMessage?> initConnection(
       Connection connection,
       String token,
       bool schedulerOn,
       List<CustomPermission> customPermissions) async {
-    final bool? success = await _channel.invokeMethod('initConnection', {
+    return SuccessMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('initConnection', {
       "connection": connection.connectionString,
       "token": token,
       "schedulerOn": schedulerOn,
       "customPermissions":
           customPermissions.map((c) => c.customPermissionString).toList()
-    });
-    return success;
+    })));
   }
 
-  static Future<String?> getUserId(Connection connection) async {
-    final String? userId = await _channel
-        .invokeMethod('getUserId', {"connection": connection.connectionString});
-    return userId;
+  static Future<UserId?> getUserId(Connection connection) async {
+    return UserId.fromJson(Map<String, dynamic>.from(await _channel
+        .invokeMethod('getUserId', {"connection": connection.connectionString})));
   }
 
-  static Future<bool?> getActivity(
-      Connection connection, DateTime startDate, DateTime endDate) async {
-    final bool? success = await _channel.invokeMethod('getActivity', {
+  static Future<bool> isHealthConnectAvailable() async{
+    return await _channel.invokeMethod("isHealthConnectAvailable");
+  }
+  static Future<DataMessage?> getActivity(
+      Connection connection, DateTime startDate, DateTime endDate, {bool toWebhook = true} ) async {
+    return DataMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('getActivity', {
       "connection": connection.connectionString,
       "startDate": convertToProperIsoFormat(startDate),
-      "endDate": convertToProperIsoFormat(endDate)
-    });
-    return success;
+      "endDate": convertToProperIsoFormat(endDate),
+      "toWebhook": toWebhook
+    })));
   }
 
-  static Future<bool?> getAthlete(Connection connection) async {
-    final bool? success = await _channel.invokeMethod(
-        'getAthlete', {"connection": connection.connectionString});
-    return success;
+  static Future<DataMessage?> getAthlete(Connection connection, {bool toWebhook = true}) async {
+    return DataMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod(
+        'getAthlete', {"connection": connection.connectionString, "toWebhook": toWebhook})));
   }
 
-  static Future<bool?> getBody(
-      Connection connection, DateTime startDate, DateTime endDate) async {
-    final bool? success = await _channel.invokeMethod('getBody', {
+  static Future<DataMessage?> getBody(
+      Connection connection, DateTime startDate, DateTime endDate, {bool toWebhook = true}) async {
+    return DataMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('getBody', {
       "connection": connection.connectionString,
       "startDate": convertToProperIsoFormat(startDate),
-      "endDate": convertToProperIsoFormat(endDate)
-    });
-    return success;
+      "endDate": convertToProperIsoFormat(endDate),
+      "toWebhook": toWebhook
+    })));
   }
 
-  static Future<bool?> getDaily(
-      Connection connection, DateTime startDate, DateTime endDate) async {
-    final bool? success = await _channel.invokeMethod('getDaily', {
+  static Future<DataMessage?> getDaily(
+      Connection connection, DateTime startDate, DateTime endDate, {bool toWebhook = true}) async {
+    return DataMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('getDaily', {
       "connection": connection.connectionString,
       "startDate": convertToProperIsoFormat(startDate),
-      "endDate": convertToProperIsoFormat(endDate)
-    });
-    return success;
+      "endDate": convertToProperIsoFormat(endDate),
+      "toWebhook": toWebhook
+    })));
   }
 
-    static Future<bool?> getMenstruation(
-      Connection connection, DateTime startDate, DateTime endDate) async {
-    final bool? success = await _channel.invokeMethod('getMenstruation', {
+    static Future<DataMessage?> getMenstruation(
+      Connection connection, DateTime startDate, DateTime endDate, {bool toWebhook = true}) async {
+    return DataMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('getMenstruation', {
       "connection": connection.connectionString,
       "startDate": convertToProperIsoFormat(startDate),
-      "endDate": convertToProperIsoFormat(endDate)
-    });
-    return success;
+      "endDate": convertToProperIsoFormat(endDate),
+      "toWebhook": toWebhook
+    })));
   }
 
-  static Future<bool?> getNutrition(
-      Connection connection, DateTime startDate, DateTime endDate) async {
-    final bool? success = await _channel.invokeMethod('getNutrition', {
+  static Future<DataMessage?> getNutrition(
+      Connection connection, DateTime startDate, DateTime endDate, {bool toWebhook = true}) async {
+    return DataMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('getNutrition', {
       "connection": connection.connectionString,
       "startDate": convertToProperIsoFormat(startDate),
-      "endDate": convertToProperIsoFormat(endDate)
-    });
-    return success;
+      "endDate": convertToProperIsoFormat(endDate),
+      "toWebhook": toWebhook
+    })));
   }
 
-  static Future<bool?> getSleep(
-      Connection connection, DateTime startDate, DateTime endDate) async {
-    final bool? success = await _channel.invokeMethod('getSleep', {
+  static Future<DataMessage?> getSleep(
+      Connection connection, DateTime startDate, DateTime endDate, {bool toWebhook = true}) async {
+    return DataMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('getSleep', {
       "connection": connection.connectionString,
       "startDate": convertToProperIsoFormat(startDate),
-      "endDate": convertToProperIsoFormat(endDate)
-    });
-    return success;
+      "endDate": convertToProperIsoFormat(endDate),
+      "toWebhook": toWebhook
+    })));
   }
 
   static Future<String?> activateGlucoseSensor() async {
