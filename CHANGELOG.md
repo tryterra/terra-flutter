@@ -1,3 +1,7 @@
+## 0.4.1-nofsl.1
+
+* Remove Freestylelibre scanning functionality from the SDK
+
 ## 0.4.1	
 
 * Bump TerraiOS SDK to 1.3.5 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
