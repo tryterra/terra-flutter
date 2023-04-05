@@ -1,4 +1,4 @@
-## 0.4.1-nofsl.1
+## 0.4.1-nofsl.2
 
 * Remove Freestylelibre scanning functionality from the SDK
 
