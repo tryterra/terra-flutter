@@ -1,3 +1,12 @@
+## 0.4.2
+
+* Bump TerraiOS SDK to 1.3.7 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
+* Bump TerraAndroid SDK to 1.4.6 (https://github.com/tryterra/TerraAndroid/wiki/Change-Log) 
+
+## 0.4.1-nofsl.2
+
+* Remove Freestylelibre scanning functionality from the SDK
+
 ## 0.4.1	
 
 * Bump TerraiOS SDK to 1.3.5 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
