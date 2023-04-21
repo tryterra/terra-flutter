@@ -1,3 +1,8 @@
+## 0.4.3
+
+* Bump TerraiOS SDK to 1.3.9 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
+* Bump TerraAndroid SDK to 1.4.8 (https://github.com/tryterra/TerraAndroid/wiki/Change-Log) 
+
 ## 0.4.2
 
 * Bump TerraiOS SDK to 1.3.7 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
