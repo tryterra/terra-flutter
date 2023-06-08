@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
     SuccessMessage? initialised;
     SuccessMessage? connected;
     UserId? testText;
-    Connection c = Connection.appleHealth;
+    Connection c = Connection.samsung;
     // Function messages may fail, so we use a try/catch Exception.
     // We also handle the message potentially returning null.
     // USE YOUR OWN CATCH BLOCKS
@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
     try {
       DateTime now = DateTime.now().toUtc();
       DateTime lastMidnight = DateTime(now.year, now.month, now.day);
-      initialised = await TerraFlutter.initTerra("DEVID", "refId");
+      initialised = await TerraFlutter.initTerra("DEV ID", "test_ref2");
       print(initialised?.success);
       connected = await TerraFlutter.initConnection(c, "TOKEN", false, []);
 
