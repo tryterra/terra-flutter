@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
     SuccessMessage? initialised;
     SuccessMessage? connected;
     UserId? testText;
-    Connection c = Connection.samsung;
+    Connection c = Connection.appleHealth;
     // Function messages may fail, so we use a try/catch Exception.
     // We also handle the message potentially returning null.
     // USE YOUR OWN CATCH BLOCKS
@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
       testText = await TerraFlutter.getUserId(c);
       print(testText?.userId);
       daily = await TerraFlutter.getDaily(
-              c, lastMidnight, now);
+              c, DateTime(2023, 02, 01), now);
       // daily = await TerraFlutter.getAthlete(c);
       // daily = await TerraFlutter.getMenstruation(
       //         c, DateTime(2023, 02, 01), DateTime(2023, 02, 10), toWebhook: false);
