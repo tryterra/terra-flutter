@@ -141,6 +141,12 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
                 return CustomPermissions.NUTRITION_CHOLESTEROL;
             case "MENSTRUATION":
                 return CustomPermissions.MENSTRUATION;
+			case "SPEED":
+                return CustomPermissions.SPEED;
+			case "POWER":
+                return CustomPermissions.POWER;
+			case "ELECTROCARDIOGRAM":
+				return CustomPermissions.ELECTROCARDIOGRAM;
             default:
                 return nil
         }

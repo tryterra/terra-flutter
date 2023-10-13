@@ -2,8 +2,8 @@ PODS:
   - Flutter (1.0.0)
   - terra_flutter_bridge (0.4.3):
     - Flutter
-    - TerraiOS (~> 1.3.16)
-  - TerraiOS (1.3.16)
+    - TerraiOS (~> 1.5.0)
+  - TerraiOS (1.5.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -21,9 +21,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  terra_flutter_bridge: 8a3ab9f8acd5f27f12c9f38249438afe2a88b700
-  TerraiOS: 4a94490297eb06cae488778e9856c3360d453dd6
+  terra_flutter_bridge: 11b5abcef759274c583494419893258a3708a75d
+  TerraiOS: 41a36f69cc166bc82043994040113b3f12967504
 
 PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
 
-COCOAPODS: 1.12.0
+COCOAPODS: 1.13.0
