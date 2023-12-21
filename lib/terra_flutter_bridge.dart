@@ -1,211 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import 'package:terra_flutter_bridge/models/enums.dart';
+import 'package:terra_flutter_bridge/models/responses.dart';
+import 'package:terra_flutter_bridge/models/planned_workout.dart';
 
 String convertToProperIsoFormat(DateTime date){
       return date.toUtc().toIso8601String();
-}
-
-// SDK connections
-enum Connection {
-  appleHealth,
-  googleFit,
-  samsung,
-  freestyleLibre,
-}
-
-extension ConnectionExtension on Connection {
-  String get connectionString {
-    switch (this) {
-      case Connection.appleHealth:
-        return 'APPLE_HEALTH';
-      case Connection.googleFit:
-        return 'GOOGLE';
-      case Connection.samsung:
-        return 'SAMSUNG';
-      case Connection.freestyleLibre:
-        return 'FREESTYLE_LIBRE';
-      default:
-        return 'UNDEFINED';
-    }
-  }
-}
-
-// Custom permissions (per datatype)
-enum CustomPermission {
-  workoutTypes,
-  activitySummary,
-  location,
-  calories,
-  steps,
-  heartRate,
-  heartRateVariability,
-  vo2max,
-  height,
-  activeDurations,
-  weight,
-  flightsClimbed,
-  bmi,
-  bodyFat,
-  exerciseDistance,
-  gender,
-  dateOfBirth,
-  basalEnergyBurned,
-  swimmingSummary,
-  restingHeartRate,
-  bloodPressure,
-  bloodGlucose,
-  bodyTemperature,
-  leanBodyMass,
-  oxygenSaturation,
-  sleepAnalysis,
-  respiratoryRate,
-  nutritionSodium,
-  nutritionProtein,
-  nutritionCarbohydrates,
-  nutritionFibre,
-  nutritionFatTotal,
-  nutritionSugar,
-  nutritionVitaminC,
-  nutritionVitaminA,
-  nutritionCalories,
-  nutritionWater,
-  nutritionCholesterol,
-  menstruation,
-  speed,
-  power,
-  electrocardiogram,
-}
-
-extension CustomPermissionExtension on CustomPermission {
-  String get customPermissionString {
-    switch (this) {
-      case CustomPermission.workoutTypes:
-        return 'WORKOUT_TYPES';
-      case CustomPermission.activitySummary:
-        return 'ACTIVITY_SUMMARY';
-      case CustomPermission.location:
-        return 'LOCATION';
-      case CustomPermission.calories:
-        return 'CALORIES';
-      case CustomPermission.steps:
-        return 'STEPS';
-      case CustomPermission.heartRate:
-        return 'HEART_RATE';
-      case CustomPermission.heartRateVariability:
-        return 'HEART_RATE_VARIABILITY';
-      case CustomPermission.vo2max:
-        return 'VO2MAX';
-      case CustomPermission.height:
-        return 'HEIGHT';
-      case CustomPermission.activeDurations:
-        return 'ACTIVE_DURATIONS';
-      case CustomPermission.weight:
-        return 'WEIGHT';
-      case CustomPermission.flightsClimbed:
-        return 'FLIGHTS_CLIMBED';
-      case CustomPermission.bmi:
-        return 'BMI';
-      case CustomPermission.bodyFat:
-        return 'BODY_FAT';
-      case CustomPermission.exerciseDistance:
-        return 'EXERCISE_DISTANCE';
-      case CustomPermission.gender:
-        return 'GENDER';
-      case CustomPermission.dateOfBirth:
-        return 'DATE_OF_BIRTH';
-      case CustomPermission.basalEnergyBurned:
-        return 'BASAL_ENERGY_BURNED';
-      case CustomPermission.swimmingSummary:
-        return 'SWIMMING_SUMMARY';
-      case CustomPermission.restingHeartRate:
-        return 'RESTING_HEART_RATE';
-      case CustomPermission.bloodPressure:
-        return 'BLOOD_PRESSURE';
-      case CustomPermission.bloodGlucose:
-        return 'BLOOD_GLUCOSE';
-      case CustomPermission.bodyTemperature:
-        return 'BODY_TEMPERATURE';
-      case CustomPermission.leanBodyMass:
-        return 'LEAN_BODY_MASS';
-      case CustomPermission.oxygenSaturation:
-        return 'OXYGEN_SATURATION';
-      case CustomPermission.sleepAnalysis:
-        return 'SLEEP_ANALYSIS';
-      case CustomPermission.respiratoryRate:
-        return 'RESPIRATORY_RATE';
-      case CustomPermission.nutritionSodium:
-        return 'NUTRITION_SODIUM';
-      case CustomPermission.nutritionProtein:
-        return 'NUTRITION_PROTEIN';
-      case CustomPermission.nutritionCarbohydrates:
-        return 'NUTRITION_CARBOHYDRATES';
-      case CustomPermission.nutritionFibre:
-        return 'NUTRITION_FIBRE';
-      case CustomPermission.nutritionFatTotal:
-        return 'NUTRITION_FAT_TOTAL';
-      case CustomPermission.nutritionSugar:
-        return 'NUTRITION_SUGAR';
-      case CustomPermission.nutritionVitaminC:
-        return 'NUTRITION_VITAMIN_C';
-      case CustomPermission.nutritionVitaminA:
-        return 'NUTRITION_VITAMIN_A';
-      case CustomPermission.nutritionCalories:
-        return 'NUTRITION_CALORIES';
-      case CustomPermission.nutritionWater:
-        return 'NUTRITION_WATER';
-      case CustomPermission.nutritionCholesterol:
-        return 'NUTRITION_CHOLESTEROL';
-      case CustomPermission.menstruation:
-        return 'MENSTRUATION';
-      case CustomPermission.speed:
-        return "SPEED";
-      case CustomPermission.power:
-        return "POWER";
-      case CustomPermission.electrocardiogram:
-        return "ELECTROCARDIOGRAM";
-      default:
-        return 'UNDEFINED';
-    }
-  }
-}
-
-class SuccessMessage{
-  final bool? success;
-  final String? error;
-
-  SuccessMessage(this.success, this.error);
-
-  SuccessMessage.fromJson(Map<String, dynamic> json)
-    : success = json["success"],
-    error = json.containsKey('error') ? (json['error']) : null;
-}
-
-class UserId{
-  final bool? success;
-  final String? userId;
-
-  UserId(this.success, this.userId);
-
-  UserId.fromJson(Map<String, dynamic> json)
-    : success = json["success"],
-    userId = json.containsKey('userId') ? (json['userId']) : null;
-}
-
-class DataMessage{
-  final bool? success;
-  final Map<String, dynamic>? data;
-  final String? error;
-
-  DataMessage(this.success, this.data, this.error);
-
-  DataMessage.fromJson(Map<String, dynamic> json)
-    : success = json["success"],
-    data = json.containsKey("data") && json["data"] != null ? (jsonDecode(json["data"])) : null,
-    error = json.containsKey('error') ? (json['error']) : null;
 }
 
 // Functions bridging
@@ -324,5 +127,37 @@ class TerraFlutter {
   static Future<String?> readGlucoseData() async {
     final String? success = await _channel.invokeMethod('readGlucoseData');
     return success;
+  }
+
+  static Future<ListDataMessage?> getPlannedWorkouts(
+      Connection connection) async {
+    return ListDataMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('getPlannedWorkouts', {
+      "connection": connection.connectionString
+    })));
+  }
+
+  static Future<SuccessMessage?> deletePlannedWorkout(
+      Connection connection, String id) async {
+    return SuccessMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('deletePlannedWorkout', {
+      "connection": connection.connectionString,
+      "workoutId": id
+    })));
+  }
+
+  static Future<SuccessMessage?> completePlannedWorkout(
+      Connection connection, String id, DateTime? at ) async {
+    return SuccessMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('completePlannedWorkout', {
+      "connection": connection.connectionString,
+      "workoutId": id,
+      "at": convertToProperIsoFormat(at ?? DateTime.now())
+    })));
+  }
+
+  static Future<SuccessMessage?> postPlannedWorkout(
+      Connection connection, TerraPlannedWorkout payload) async {
+    return SuccessMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('postPlannedWorkout', {
+      "connection": connection.connectionString,
+      "payload": jsonEncode(payload.toJson())
+    })));
   }
 }

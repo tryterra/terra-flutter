@@ -1,6 +1,15 @@
+
+import 'package:logger/logger.dart';
+import 'package:terra_flutter_bridge/models/enums.dart';
+import 'package:terra_flutter_bridge/models/responses.dart';
 import 'package:terra_flutter_bridge/terra_flutter_bridge.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:terra_flutter_example/generate.dart';
+import 'config.dart' as constants;
+
+var logger = Logger();
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +22,27 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
+class AuthTokenResponse {
+  String token;
+  String status;
+
+  AuthTokenResponse(this.token, this.status);
+
+  factory AuthTokenResponse.fromJson(Map<String, dynamic> json) {
+    return AuthTokenResponse(
+      json['token'],
+      json['status'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'token': token,
+        'status': status,
+      };
+}
+
 class _MyAppState extends State<MyApp> {
+
   String _testText = "Hello World";
   bool _initialised = false;
   bool _connected = false;
@@ -31,6 +60,7 @@ class _MyAppState extends State<MyApp> {
     SuccessMessage? connected;
     UserId? testText;
     Connection c = Connection.appleHealth;
+
     // Function messages may fail, so we use a try/catch Exception.
     // We also handle the message potentially returning null.
     // USE YOUR OWN CATCH BLOCKS
@@ -38,12 +68,13 @@ class _MyAppState extends State<MyApp> {
     try {
       DateTime now = DateTime.now().toUtc();
       DateTime lastMidnight = DateTime(now.year, now.month, now.day);
-      initialised = await TerraFlutter.initTerra("DEVID", "test_ref2");
-      print(initialised?.success);
-      connected = await TerraFlutter.initConnection(c, "TOKEN", true, [CustomPermission.speed, CustomPermission.power]);
+      initialised = await TerraFlutter.initTerra(constants.devId, "test_ref2");
+      await postPlannedWorkout_();
+      logger.d(initialised?.success);
+      connected = await TerraFlutter.initConnection(c, (await generateToken()).token , true, [CustomPermission.speed, CustomPermission.power]);
 
       testText = await TerraFlutter.getUserId(c);
-      print(testText?.userId);
+      logger.d(testText?.userId as String);
       daily = await TerraFlutter.getDaily(
               c, DateTime(2023, 02, 01), now);
       // daily = await TerraFlutter.getAthlete(c);
@@ -55,9 +86,8 @@ class _MyAppState extends State<MyApp> {
               c, DateTime(2023, 02, 01), DateTime(2023, 02, 10));
       daily = await TerraFlutter.getActivity(
               c, DateTime(2023, 02, 01), DateTime(2023, 02, 03), toWebhook: false);
-      print(await TerraFlutter.isHealthConnectAvailable());
     } on Exception catch (e) {
-      print('error caught: $e');
+      logger.d('error caught: $e');
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -71,6 +101,39 @@ class _MyAppState extends State<MyApp> {
       _testText = testText?.userId ?? "";
     });
   }
+
+
+  Future<AuthTokenResponse> generateToken() async {
+    final response = await http.post(
+      Uri.parse("https://api.tryterra.co/v2/auth/generateAuthToken"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Dev-Id': constants.devId,
+        'x-api-key': constants.apiKey,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return AuthTokenResponse.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to create data.');
+    }
+  }
+
+  Future<void> postPlannedWorkout_() async{
+    final resp = await TerraFlutter.postPlannedWorkout(Connection.appleHealth, generateSamplePlannedWorkout());
+    logger.d((resp?.success ?? false));
+    final postedPlannedWorkouts = await TerraFlutter.getPlannedWorkouts(Connection.appleHealth);
+    logger.d(postedPlannedWorkouts?.data.toString() ?? "No data");
+    // final markComplete = await TerraFlutter.completePlannedWorkout(Connection.appleHealth, "ceef601a-23e4-4393-8483-a9f6d37b0407", DateTime.now());
+    // logger.d((markComplete?.success ?? false));
+    final deleteWorkout = await TerraFlutter.deletePlannedWorkout(Connection.appleHealth, "ceef601a-23e4-4393-8483-a9f6d37b0407");
+    logger.d((deleteWorkout?.success ?? false));
+  }  
 
   @override
   Widget build(BuildContext context) {

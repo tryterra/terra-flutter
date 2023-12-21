@@ -511,6 +511,214 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
         }
 	}
 
+	func getPlannedWorkouts(connection: String, result: @escaping FlutterResult){
+		let c = connectionParse(connection: connection)
+		guard let c = c else {
+			result(FlutterError(
+				code: "Could not parse connection",
+				message: "Could not call getter for type: plannedWorkout. make sure you are passing a valid Connection type",
+				details: nil
+			))
+			return
+		}
+
+		guard let terra = terra else {
+			result(FlutterError(
+				code: "Terra not initialised",
+				message: "Terra not initialised. Please run initTerra first",
+				details: nil
+			))
+			return
+		}
+
+		if #available(iOS 17.0, *) {
+			terra.getPlannedWorkouts(
+				type: c
+			){
+				(data, err) in 
+                if let err = err {
+                    result(["success": false, "data": nil, "error": self.errorMessage(err)])
+                }
+                else{
+                    do {
+                        let jsonData = try JSONEncoder().encode(data)
+                        result(["success": true, "data": String(data: jsonData, encoding: .utf8) ?? ""])
+                    }
+                    catch {
+                        result(["success": false, "error": "Error decoding data into correct format"])
+                    }
+                }
+			}
+		} else {
+			result(FlutterError(
+				code: "iOS Version Error",
+				message: "Please make sure the iOS Version is 17.0 and above",
+				details: nil
+			))
+		}
+	}
+
+	func deletePlannedWorkout(connection: String, workoutId: String, result: @escaping FlutterResult){
+		let c = connectionParse(connection: connection)
+
+		guard let c = c else {
+			result(FlutterError(
+				code: "Could not parse connection",
+				message: "Could not call getter for type: plannedWorkout. make sure you are passing a valid Connection type",
+				details: nil
+			))
+			return
+		}
+
+		guard let terra = terra else {
+			result(FlutterError(
+				code: "Terra not initialised",
+				message: "Terra not initialised. Please run initTerra first",
+				details: nil
+			))
+			return
+		}
+
+		guard let uuid = UUID(uuidString: workoutId) else {
+			result(FlutterError(
+				code: "Invalid UUID",
+				message: "Please make sure the workoutId is a valid UUID",
+				details: nil
+			))
+			return
+		}
+
+		if #available(iOS 17.0, *) {
+			terra.deletePlannedWorkout(
+				type: c,
+				id: uuid
+			){
+				(success, err) in 
+				if let err = err {
+					result(["success": false, "error": self.errorMessage(err)])
+				}
+				else{
+					result(["success": success])
+				}
+			}
+		} else {
+			result(FlutterError(
+				code: "iOS Version Error",
+				message: "Please make sure the iOS Version is 17.0 and above",
+				details: nil
+			))
+		}
+	}
+
+	func completePlannedWorkout(connection: String, workoutId: String, at: Date, result: @escaping FlutterResult){
+		let c = connectionParse(connection: connection)
+
+		guard let c = c else {
+			result(FlutterError(
+				code: "Could not parse connection",
+				message: "Could not call getter for type: plannedWorkout. make sure you are passing a valid Connection type",
+				details: nil
+			))
+			return
+		}
+
+		guard let terra = terra else {
+			result(FlutterError(
+				code: "Terra not initialised",
+				message: "Terra not initialised. Please run initTerra first",
+				details: nil
+			))
+			return
+		}
+
+
+		guard let uuid = UUID(uuidString: workoutId) else {
+			result(FlutterError(
+				code: "Invalid UUID",
+				message: "Please make sure the workoutId is a valid UUID",
+				details: nil
+			))
+			return
+		}
+
+		if #available(iOS 17.0, *) {
+			terra.markPlannedWorkoutComplete(
+				type: c,
+				id: uuid,
+				at: at
+			){
+				(success, err) in 
+				if let err = err {
+					result(["success": false, "error": self.errorMessage(err)])
+				}
+				else{
+					result(["success": success])
+				}
+			}
+		} else {
+			result(FlutterError(
+				code: "iOS Version Error",
+				message: "Please make sure the iOS Version is 17.0 and above",
+				details: nil
+			))
+		}
+	}
+
+	func postPlannedWorkout(connection: String, workout: String, result: @escaping FlutterResult){
+		let c = connectionParse(connection: connection)
+
+		guard let c = c else {
+			result(FlutterError(
+				code: "Could not parse connection",
+				message: "Could not call getter for type: plannedWorkout. make sure you are passing a valid Connection type",
+				details: nil
+			))
+			return
+		}
+
+		guard let terra = terra else {
+			result(FlutterError(
+				code: "Terra not initialised",
+				message: "Terra not initialised. Please run initTerra first",
+				details: nil
+			))
+			return
+		}
+
+		if #available(iOS 17.0, *) {
+			do {
+				let data = try JSONDecoder().decode(TerraPlannedWorkout.self, from: workout.data(using: .utf8)!)
+				terra.postPlannedWorkout(
+					type: c,
+					payload: data
+				){
+					(success, err) in 
+					if let err = err {
+						result(["success": false, "error": self.errorMessage(err)])
+					}
+					else{
+						result(["success": success])
+					}
+				}
+			}
+			catch {
+				result(FlutterError(
+					code: "PlannedWorkoutPayload Error",
+					message: "Could not parse the payload. Please make sure the payload is in the correct format \(error)",
+					details: "\(workout)"
+				))
+			}
+		} else {
+			result(FlutterError(
+				code: "iOS Version Error",
+				message: "Please make sure the iOS Version is 17.0 and above",
+				details: nil
+			))
+		}
+	}
+
+
+
 	// exposed handler
 	// parse arguments and call appropriate function
 	public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -607,6 +815,18 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 					break;
 				case "activateGlucoseSensor":
 					activateGlucoseSensor(result: result)
+					break;
+				case "getPlannedWorkouts":
+					getPlannedWorkouts(connection: args["connection"] as! String, result: result)
+					break;
+				case "deletePlannedWorkout":
+					deletePlannedWorkout(connection: args["connection"] as! String, workoutId: args["workoutId"] as! String, result: result)
+					break;
+				case "completePlannedWorkout":
+					completePlannedWorkout(connection: args["connection"] as! String, workoutId: args["workoutId"] as! String, at: dateFormatter.date(from: args["at"] as! String)!,  result: result)
+					break;
+				case "postPlannedWorkout":
+					postPlannedWorkout(connection: args["connection"] as! String, workout: args["payload"] as! String, result: result)
 					break;
 				default:
 					result(FlutterMethodNotImplemented)

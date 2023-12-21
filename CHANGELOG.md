@@ -1,3 +1,12 @@
+## 0.6.0
+
+* Bump TerraiOS SDK to 1.5.3 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
+
+## 0.6.0-beta
+
+* Bump TerraiOS SDK to 1.5.3-beta.3 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
+    * This introduces WorkoutKit (PlannedWorkout) to Flutter
+
 ## 0.5.4
 
 * Bump TerraiOS SDK to 1.5.2 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
