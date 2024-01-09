@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.HashMap;
 import java.util.function.Function;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 
@@ -338,6 +339,13 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
     result.success(Terra.Companion.isHealthConnectAvailable(this.context));
   }
 
+  private void getGivenPermissions(Result result){
+    this.terra.allGivenPermissions((permissions) -> {
+      result.success(new ArrayList<>(permissions));
+      return Unit.INSTANCE;
+    });
+  }
+
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     binaryMessenger = flutterPluginBinding.getBinaryMessenger();
@@ -450,6 +458,11 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
       case "isHealthConnectAvailable":
         isHealthConnectAvailable(
           result
+        );
+        break;
+      case "getGivenPermissions":
+        getGivenPermissions(
+            result
         );
         break;
       default:

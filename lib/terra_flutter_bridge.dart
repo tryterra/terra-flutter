@@ -160,4 +160,8 @@ class TerraFlutter {
       "payload": jsonEncode(payload.toJson())
     })));
   }
+
+  static Future<Set<String>> getGivenPermissions() async {
+    return Set<String>.from(await _channel.invokeMethod('getGivenPermissions'));
+  }
 }

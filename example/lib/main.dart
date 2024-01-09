@@ -59,7 +59,7 @@ class _MyAppState extends State<MyApp> {
     SuccessMessage? initialised;
     SuccessMessage? connected;
     UserId? testText;
-    Connection c = Connection.appleHealth;
+    Connection c = Connection.samsung;
 
     // Function messages may fail, so we use a try/catch Exception.
     // We also handle the message potentially returning null.
@@ -69,23 +69,25 @@ class _MyAppState extends State<MyApp> {
       DateTime now = DateTime.now().toUtc();
       DateTime lastMidnight = DateTime(now.year, now.month, now.day);
       initialised = await TerraFlutter.initTerra(constants.devId, "test_ref2");
-      await postPlannedWorkout_();
+      // await postPlannedWorkout_();
       logger.d(initialised?.success);
-      connected = await TerraFlutter.initConnection(c, (await generateToken()).token , true, [CustomPermission.speed, CustomPermission.power]);
+      connected = await TerraFlutter.initConnection(c, (await generateToken()).token , true, []);
 
       testText = await TerraFlutter.getUserId(c);
       logger.d(testText?.userId as String);
-      daily = await TerraFlutter.getDaily(
-              c, DateTime(2023, 02, 01), now);
-      // daily = await TerraFlutter.getAthlete(c);
-      // daily = await TerraFlutter.getMenstruation(
-      //         c, DateTime(2023, 02, 01), DateTime(2023, 02, 10), toWebhook: false);
-      daily = await TerraFlutter.getNutrition(
-              c, DateTime(2023, 02, 01), DateTime(2023, 02, 10));
-      daily = await TerraFlutter.getSleep(
-              c, DateTime(2023, 02, 01), DateTime(2023, 02, 10));
-      daily = await TerraFlutter.getActivity(
-              c, DateTime(2023, 02, 01), DateTime(2023, 02, 03), toWebhook: false);
+      // daily = await TerraFlutter.getDaily(
+      //         c, DateTime(2023, 02, 01), now);
+      // // daily = await TerraFlutter.getAthlete(c);
+      // // daily = await TerraFlutter.getMenstruation(
+      // //         c, DateTime(2023, 02, 01), DateTime(2023, 02, 10), toWebhook: false);
+      // daily = await TerraFlutter.getNutrition(
+      //         c, DateTime(2023, 02, 01), DateTime(2023, 02, 10));
+      // daily = await TerraFlutter.getSleep(
+      //         c, DateTime(2023, 02, 01), DateTime(2023, 02, 10));
+      // daily = await TerraFlutter.getActivity(
+      //         c, DateTime(2023, 02, 01), DateTime(2023, 02, 03), toWebhook: false);
+      logger.d("permissions:" );
+      logger.d(await TerraFlutter.getGivenPermissions());
     } on Exception catch (e) {
       logger.d('error caught: $e');
     }

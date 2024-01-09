@@ -1,3 +1,7 @@
+## 0.6.1
+
+* Extend getAllPermissions function from Android Health Connect to Flutter.
+
 ## 0.6.0
 
 * Bump TerraiOS SDK to 1.5.3 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
