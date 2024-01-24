@@ -1,3 +1,8 @@
+## 0.6.2-noperm
+
+* Bump TerraiOS SDK to 1.6.1 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
+* Android Health Connection No permissions included.
+
 ## 0.6.1
 
 * Extend getAllPermissions function from Android Health Connect to Flutter.
