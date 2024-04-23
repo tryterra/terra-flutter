@@ -24,20 +24,17 @@ class MyApp extends StatefulWidget {
 
 class AuthTokenResponse {
   String token;
-  String status;
 
-  AuthTokenResponse(this.token, this.status);
+  AuthTokenResponse(this.token);
 
   factory AuthTokenResponse.fromJson(Map<String, dynamic> json) {
     return AuthTokenResponse(
       json['token'],
-      json['status'],
     );
   }
 
   Map<String, dynamic> toJson() => {
         'token': token,
-        'status': status,
       };
 }
 
@@ -67,25 +64,25 @@ class _MyAppState extends State<MyApp> {
     // HAVING ALL FUNCTIONS IN THE SAME CATCH IS NOT A GOOD IDEA
     try {
       DateTime now = DateTime.now().toUtc();
-      DateTime lastMidnight = DateTime(now.year, now.month, now.day);
       initialised = await TerraFlutter.initTerra(constants.devId, "test_ref2");
       // await postPlannedWorkout_();
       logger.d(initialised?.success);
       connected = await TerraFlutter.initConnection(c, (await generateToken()).token , true, []);
-
+      logger.d(connected?.success);
       testText = await TerraFlutter.getUserId(c);
       logger.d(testText?.userId as String);
-      // daily = await TerraFlutter.getDaily(
-      //         c, DateTime(2023, 02, 01), now);
-      // // daily = await TerraFlutter.getAthlete(c);
-      // // daily = await TerraFlutter.getMenstruation(
-      // //         c, DateTime(2023, 02, 01), DateTime(2023, 02, 10), toWebhook: false);
-      // daily = await TerraFlutter.getNutrition(
-      //         c, DateTime(2023, 02, 01), DateTime(2023, 02, 10));
-      // daily = await TerraFlutter.getSleep(
-      //         c, DateTime(2023, 02, 01), DateTime(2023, 02, 10));
-      // daily = await TerraFlutter.getActivity(
-      //         c, DateTime(2023, 02, 01), DateTime(2023, 02, 03), toWebhook: false);
+      daily = await TerraFlutter.getDaily(
+              c, DateTime(2024, 04, 01), now);
+      logger.d(daily?.data);
+      // daily = await TerraFlutter.getAthlete(c);
+      // daily = await TerraFlutter.getMenstruation(
+      //         c, DateTime(2023, 02, 01), DateTime(2023, 02, 10), toWebhook: false);
+      daily = await TerraFlutter.getNutrition(
+              c, DateTime(2024, 04, 01), DateTime(2024, 04, 10));
+      daily = await TerraFlutter.getSleep(
+              c, DateTime(2024, 04, 01), DateTime(2024, 04, 10));
+      daily = await TerraFlutter.getActivity(
+              c, DateTime(2024, 04, 01), DateTime(2024, 04, 03), toWebhook: false);
       logger.d("permissions:" );
       logger.d(await TerraFlutter.getGivenPermissions());
     } on Exception catch (e) {
@@ -110,7 +107,7 @@ class _MyAppState extends State<MyApp> {
       Uri.parse("https://api.tryterra.co/v2/auth/generateAuthToken"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'Dev-Id': constants.devId,
+        'dev-Id': constants.devId,
         'x-api-key': constants.apiKey,
       },
     );
@@ -122,7 +119,7 @@ class _MyAppState extends State<MyApp> {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      throw Exception('Failed to create data.');
+      throw Exception('Failed to create token.');
     }
   }
 

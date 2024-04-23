@@ -1,4 +1,4 @@
-package co.tryterra.terra_flutter_example;
+package co.tryterra.terra;
 
 import io.flutter.embedding.android.FlutterActivity;
 
