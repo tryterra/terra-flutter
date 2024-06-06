@@ -1,6 +1,6 @@
 name: terra_flutter_bridge
 description: Terra Flutter bridge to connect to TerraiOS and TerraAndroid.
-version: 0.7.0-samsung
+version: 0.7.0-samsung.1
 homepage: https://github.com/tryterra/terra-flutter
 
 environment:
@@ -64,3 +64,28 @@ flutter:
   #
   # For details regarding fonts in packages, see
   # https://flutter.dev/custom-fonts/#from-packages
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
