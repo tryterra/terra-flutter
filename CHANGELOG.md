@@ -1,3 +1,8 @@
+## 0.6.4
+
+* Bump TerraiOS SDK to 1.6.10 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
+* Bump dependency `http` to 1.1.0
+
 ## 0.6.3
 
 * Bump TerraiOS SDK to 1.6.2 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
