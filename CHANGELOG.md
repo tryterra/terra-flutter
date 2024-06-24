@@ -1,3 +1,7 @@
+## 0.6.6
+
+* Bump TerraiOS SDK to 1.6.12 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
+
 ## 0.6.5
 
 * Bump TerraiOS SDK to 1.6.11 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)

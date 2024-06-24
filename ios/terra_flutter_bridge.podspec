@@ -15,7 +15,7 @@ Flutter Bridge for Terra iOS
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'TerraiOS', '~> 1.6.11'
+  s.dependency 'TerraiOS', '~> 1.6.12'
   s.frameworks = ['HealthKit']
 
   s.platform = :ios, '13.0'
