@@ -26,6 +26,10 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 33
 
+    if (project.android.hasProperty("namespace")) {
+        namespace 'co.tryterra.terra_flutter_bridge'
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
