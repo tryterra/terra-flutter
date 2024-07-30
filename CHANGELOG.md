@@ -1,3 +1,9 @@
+## 0.6.7
+
+* Bump TerraiOS SDK to 1.6.13 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
+* Bump TerraAndroid SDK to 1.4.24 (https://github.com/tryterra/TerraAndroid/wiki/Change-Log) 
+    - Added namespace to android build gradle
+
 ## 0.6.6
 
 * Bump TerraiOS SDK to 1.6.12 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
