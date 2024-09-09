@@ -59,7 +59,7 @@ class _MyAppState extends State<MyApp> {
     SuccessMessage? initialised;
     SuccessMessage? connected;
     UserId? testText;
-    Connection c = Connection.samsung;
+    Connection c = Connection.healthConnect;
 
     // Function messages may fail, so we use a try/catch Exception.
     // We also handle the message potentially returning null.
@@ -80,12 +80,12 @@ class _MyAppState extends State<MyApp> {
       // // daily = await TerraFlutter.getAthlete(c);
       // // daily = await TerraFlutter.getMenstruation(
       // //         c, DateTime(2023, 02, 01), DateTime(2023, 02, 10), toWebhook: false);
-      // daily = await TerraFlutter.getNutrition(
-      //         c, DateTime(2023, 02, 01), DateTime(2023, 02, 10));
-      // daily = await TerraFlutter.getSleep(
-      //         c, DateTime(2023, 02, 01), DateTime(2023, 02, 10));
-      // daily = await TerraFlutter.getActivity(
-      //         c, DateTime(2023, 02, 01), DateTime(2023, 02, 03), toWebhook: false);
+      daily = await TerraFlutter.getNutrition(
+              c, DateTime(2023, 02, 01), DateTime(2023, 02, 10));
+      daily = await TerraFlutter.getSleep(
+              c, DateTime(2023, 02, 01), DateTime(2023, 02, 10));
+      daily = await TerraFlutter.getActivity(
+              c, DateTime(2023, 02, 01), DateTime(2023, 02, 03), toWebhook: false);
       logger.d("permissions:" );
       logger.d(await TerraFlutter.getGivenPermissions());
     } on Exception catch (e) {

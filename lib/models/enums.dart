@@ -214,6 +214,7 @@ enum Connection {
   appleHealth,
   googleFit,
   samsung,
+  healthConnect,
   freestyleLibre,
 }
 
@@ -228,6 +229,8 @@ extension ConnectionExtension on Connection {
         return 'SAMSUNG';
       case Connection.freestyleLibre:
         return 'FREESTYLE_LIBRE';
+      case Connection.healthConnect:
+        return 'HEALTH_CONNECT';
       default:
         return 'UNDEFINED';
     }
