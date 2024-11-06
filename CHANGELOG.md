@@ -1,9 +1,12 @@
+# 0.7.1
+* Bump TerraiOS SDK to 1.6.21 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
+* Bump TerraAndroid SDK to 1.5.1 (https://github.com/tryterra/TerraAndroid/wiki/Change-Log)
+
 ## 0.7.0
 
 * Bump TerraiOS SDK to 1.6.19 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
 * Bump TerraAndroid SDK to 1.5.0 (https://github.com/tryterra/TerraAndroid/wiki/Change-Log)
     - Includes support for resource: HEALTH_CONNECT, allowing data aggregated over all sources
-
 
 ## 0.6.9
 
