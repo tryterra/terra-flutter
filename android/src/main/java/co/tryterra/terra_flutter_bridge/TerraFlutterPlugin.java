@@ -141,6 +141,10 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
             return CustomPermissions.NUTRITION_WATER;
         case "NUTRITION_CHOLESTEROL":
             return CustomPermissions.NUTRITION_CHOLESTEROL;
+        case "SPEED":
+            return CustomPermissions.SPEED;
+        case "POWER":
+            return CustomPermissions.POWER;
         default:
             return null;
     }
