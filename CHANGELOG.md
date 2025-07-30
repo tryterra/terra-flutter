@@ -1,3 +1,7 @@
+## 0.8.0
+* Bump TerraAndroid SDK to 1.6.0 (https://github.com/tryterra/TerraAndroid/wiki/Change-Log)
+    - Permissions no longer get requested on initTerra.
+
 ## 0.7.9
 * Bump TerraAndroid SDK to 1.5.10 (https://github.com/tryterra/TerraAndroid/wiki/Change-Log)
 
