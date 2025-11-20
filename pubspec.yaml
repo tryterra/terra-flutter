@@ -1,6 +1,6 @@
 name: terra_flutter_bridge
 description: Terra Flutter bridge to connect to TerraiOS and TerraAndroid.
-version: 0.8.0
+version: 0.8.1
 homepage: https://github.com/tryterra/terra-flutter
 
 environment:
