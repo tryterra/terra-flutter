@@ -1,18 +1,18 @@
 group 'co.tryterra.terra_flutter_bridge'
 version '1.0'
 
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
+// buildscript {
+//     repositories {
+//         google()
+//         mavenCentral()
+//     }
 
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.0'
-    }
-}
+//     dependencies {
+//         classpath 'com.android.tools.build:gradle:7.0.0'
+//     }
+// }
 
-rootProject.allprojects {
+allprojects {
     repositories {
         google()
         mavenCentral()
@@ -22,7 +22,7 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 36
 
     if (project.android.hasProperty("namespace")) {
         namespace 'co.tryterra.terra_flutter_bridge'
@@ -40,7 +40,7 @@ android {
 
     dependencies {
         implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.1'
-        implementation 'co.tryterra:terra-android:1.6.0'
+        implementation 'co.tryterra:terra-android:1.6.2'
         implementation 'com.google.code.gson:gson:2.9.0'
     }
 }
