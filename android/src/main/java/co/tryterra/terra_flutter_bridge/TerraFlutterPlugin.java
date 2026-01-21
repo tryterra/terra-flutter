@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 
+import android.app.Activity;
 import android.content.Context;
 
 import io.flutter.embedding.android.FlutterActivity;
@@ -41,7 +42,7 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
   /// when the Flutter Engine is detached from the Activity
   private MethodChannel channel;
   private Context context;
-  private FlutterActivity activity = null;
+  private Activity activity = null;
   private BinaryMessenger binaryMessenger = null;
 
   private Gson gson = new Gson();
@@ -163,10 +164,15 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
     String referenceId,
     Result result
   ) {
+    if (this.activity == null) {
+      result.error("ACTIVITY_NOT_AVAILABLE", "Activity not attached. Please ensure the app is in foreground.", null);
+      return;
+    }
+
     Terra.Companion.instance(
       devID,
       referenceId,
-      Objects.requireNonNull(this.context),
+      this.activity,
       (terraManager, error) ->{
           this.terra = terraManager;
           HashMap<String, Object> map = new HashMap<>();
@@ -191,6 +197,11 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
         return;
     }
 
+    if (this.activity == null) {
+      result.error("ACTIVITY_NOT_AVAILABLE", "Activity not attached. Please ensure the app is in foreground.", null);
+      return;
+    }
+
     HashSet<CustomPermissions> cPermissions = new HashSet<>();
     for (Object customPermission: customPermissions){
         if (customPermission == null){
@@ -205,7 +216,8 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
 
     this.terra.initConnection(
       Objects.requireNonNull(parseConnection(connection)),
-      token, Objects.requireNonNull(this.context),
+      token,
+      this.activity,
       cPermissions,
       schedulerOn,
       null,
@@ -360,24 +372,26 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
 
   @Override
   public void onAttachedToActivity(ActivityPluginBinding binding){
-    this.context = (Context) binding.getActivity();
+    this.activity = binding.getActivity();
+    this.context = binding.getActivity();
     channel = new MethodChannel(binaryMessenger, "terra_flutter_bridge");
     channel.setMethodCallHandler(this);
   }
 
   @Override
   public void onDetachedFromActivityForConfigChanges() {
-
+    // Keep activity reference during config changes (e.g., rotation)
   }
 
   @Override
   public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
-
+    this.activity = binding.getActivity();
+    this.context = binding.getActivity();
   }
 
   @Override
   public void onDetachedFromActivity() {
-
+    this.activity = null;
   }
 
   @Override
