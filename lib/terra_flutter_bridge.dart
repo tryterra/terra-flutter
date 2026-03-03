@@ -118,12 +118,14 @@ class TerraFlutter {
     })));
   }
 
+  @Deprecated('This method is deprecated and will be removed in a future release.')
   static Future<String?> activateGlucoseSensor() async {
     final String? success = await _channel.invokeMethod('activateGlucoseSensor');
     return success;
   }
 
   // only for apple
+  @Deprecated('This method is deprecated and will be removed in a future release.')
   static Future<String?> readGlucoseData() async {
     final String? success = await _channel.invokeMethod('readGlucoseData');
     return success;
