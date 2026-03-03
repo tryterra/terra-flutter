@@ -131,6 +131,7 @@ class TerraFlutter {
     return success;
   }
 
+  @Deprecated('This method is deprecated and will be removed in a future release.')
   static Future<ListDataMessage?> getPlannedWorkouts(
       Connection connection) async {
     return ListDataMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('getPlannedWorkouts', {
@@ -138,6 +139,7 @@ class TerraFlutter {
     })));
   }
 
+  @Deprecated('This method is deprecated and will be removed in a future release.')
   static Future<SuccessMessage?> deletePlannedWorkout(
       Connection connection, String id) async {
     return SuccessMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('deletePlannedWorkout', {
@@ -146,6 +148,7 @@ class TerraFlutter {
     })));
   }
 
+  @Deprecated('This method is deprecated and will be removed in a future release.')
   static Future<SuccessMessage?> completePlannedWorkout(
       Connection connection, String id, DateTime? at ) async {
     return SuccessMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('completePlannedWorkout', {
@@ -155,6 +158,7 @@ class TerraFlutter {
     })));
   }
 
+  @Deprecated('This method is deprecated and will be removed in a future release.')
   static Future<SuccessMessage?> postPlannedWorkout(
       Connection connection, TerraPlannedWorkout payload) async {
     return SuccessMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('postPlannedWorkout', {
