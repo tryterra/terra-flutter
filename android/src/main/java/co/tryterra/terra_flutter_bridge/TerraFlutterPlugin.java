@@ -471,6 +471,11 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
             result
         );
         break;
+      case "setIgnoredSources":
+        HashMap<String, Object> ignoredResult = new HashMap<>();
+        ignoredResult.put("success", true);
+        result.success(ignoredResult);
+        break;
       default:
         result.notImplemented();
         break;
