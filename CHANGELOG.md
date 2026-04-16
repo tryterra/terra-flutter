@@ -1,3 +1,7 @@
+## 0.9.0
+* Bump TerraiOS SDK to 1.7.0 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
+    - Uses Swift 6
+
 ## 0.8.3
 * Bump TerraiOS SDK to 1.6.32 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
 
