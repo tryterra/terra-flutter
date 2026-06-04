@@ -1,3 +1,6 @@
+## 0.9.2
+* Bump TerraiOS SDK to ~> 1.7.7 — planned workout backend sync enabled by default
+
 ## 0.9.1
 * Bump TerraiOS SDK to 1.7.1 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
 
