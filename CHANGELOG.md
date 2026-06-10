@@ -1,3 +1,7 @@
+## 0.9.0-samsung.3
+
+* Bump android-sdk (Samsung-direct) to 0.0.11 — fixes empty activity/sleep for already-granted users (https://github.com/tryterra/TerraAndroidLocal/pull/17)
+
 ## 0.6.3
 
 * Bump TerraiOS SDK to 1.6.2 (https://github.com/tryterra/TerraiOS/wiki/Change-Log)
