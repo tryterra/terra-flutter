@@ -211,7 +211,7 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
       null,
       (success, error)-> {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("success", true);
+        map.put("success", success);
         if (error != null){
           map.put("error", error.getMessage());
         }
