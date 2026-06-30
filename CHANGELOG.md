@@ -1,3 +1,9 @@
+## 0.9.4
+* Bump TerraiOS SDK to ~> 1.7.10 — Apple Watch lap/segment fix: laps now follow the user's segment markers, with correct per-segment distance/pace/HR/power (ZD 5587).
+
+## 0.9.3
+* Bump TerraiOS SDK to ~> 1.7.9.
+
 ## 0.9.2
 * Bump TerraiOS SDK to ~> 1.7.7 — planned workout backend sync enabled by default
 
