@@ -1,3 +1,7 @@
+## 0.9.0-samsung.4
+
+* Bump android-sdk to 0.0.12 — fixes a crash on init when the user is linked to Samsung Health but the Samsung Health app is not installed (https://github.com/tryterra/TerraAndroidLocal/pull/26)
+
 ## 0.9.0-samsung.3
 
 * Bump android-sdk (Samsung-direct) to 0.0.11 — fixes empty activity/sleep for already-granted users (https://github.com/tryterra/TerraAndroidLocal/pull/17)
