@@ -1,3 +1,7 @@
+## 0.9.0-samsung.5
+
+* Fix: `initTerra` and `initConnection` now return the real success value from the native Android SDK instead of always returning `success: true`. Apps that branch on this flag will now see genuine initialisation and connection failures that were previously silent. The `error` field is unchanged. This brings Android in line with the behaviour iOS already implements.
+
 ## 0.9.0-samsung.4
 
 * Bump android-sdk to 0.0.12 — fixes a crash on init when the user is linked to Samsung Health but the Samsung Health app is not installed (https://github.com/tryterra/TerraAndroidLocal/pull/26)
