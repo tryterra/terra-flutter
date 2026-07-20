@@ -170,7 +170,7 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
       (terraManager, error) ->{
           this.terra = terraManager;
           HashMap<String, Object> map = new HashMap<>();
-          map.put("success", true);
+          map.put("success", error == null);
           if (error != null){
             map.put("error", error.getMessage());
           }
@@ -211,7 +211,7 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
       null,
       (success, error)-> {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("success", true);
+        map.put("success", success);
         if (error != null){
           map.put("error", error.getMessage());
         }
@@ -222,8 +222,9 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
 
   private void getUserId(String connection, Result result){
     HashMap<String, Object> map = new HashMap<>();
-    map.put("success", true);
-    map.put("userId", terra.getUserId(Objects.requireNonNull(parseConnection(connection))));
+    String userId = terra.getUserId(Objects.requireNonNull(parseConnection(connection)));
+    map.put("success", userId != null);
+    map.put("userId", userId);
     result.success(map);
   }
 
