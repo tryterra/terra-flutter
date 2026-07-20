@@ -480,7 +480,12 @@ public class TerraFlutterPlugin implements FlutterPlugin, MethodCallHandler, Act
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    channel.setMethodCallHandler(null);
+    // channel is created in onAttachedToActivity, so a headless engine that never
+    // attaches an Activity (e.g. an FCM background isolate) reaches here with it null.
+    if (channel != null) {
+      channel.setMethodCallHandler(null);
+      channel = null;
+    }
   }
 
 }
