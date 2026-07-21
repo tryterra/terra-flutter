@@ -19,6 +19,9 @@ on:
     tags:
       - '[0-9]+.[0-9]+.[0-9]+'      # stable releases, e.g. 0.9.5
       - '[0-9]+.[0-9]+.[0-9]+-**'   # prerelease lines, e.g. 0.9.0-samsung.5
+  # Manual re-publish of whichever ref you dispatch against (e.g. to retry a
+  # failed run without cutting a new tag). Also enabled pub.dev-side.
+  workflow_dispatch:
 
 jobs:
   publish:
