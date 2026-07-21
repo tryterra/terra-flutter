@@ -1,0 +1,37 @@
+# Publishes terra_flutter_bridge to pub.dev on a version-tag push, using GitHub
+# Actions OIDC — keyless, no stored pub.dev credentials.
+#
+# One-time setup (done on pub.dev by a package admin, not in this repo):
+#   pub.dev -> terra_flutter_bridge -> Admin -> Automated publishing ->
+#   enable "Publishing from GitHub Actions", repository: tryterra/terra-flutter,
+#   tag pattern: {{version}}  (tag 0.9.5 publishes version 0.9.5).
+#
+# To release: bump `version:` in pubspec.yaml, merge, then push a tag equal to
+# that version, e.g.  git tag 0.9.5 && git push origin 0.9.5
+#
+# NOTE: tag-triggered workflows run from the tagged commit's tree, so this file
+# must be present on every branch that gets release-tagged. Keep it on both
+# `main` and `samsung` (the Samsung-direct prerelease line).
+name: Publish to pub.dev
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'      # stable releases, e.g. 0.9.5
+      - '[0-9]+.[0-9]+.[0-9]+-**'   # prerelease lines, e.g. 0.9.0-samsung.5
+  # Manual re-publish of whichever ref you dispatch against (e.g. to retry a
+  # failed run without cutting a new tag). Also enabled pub.dev-side.
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # mints the OIDC token pub.dev exchanges for a short-lived publish credential
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter pub publish --force
