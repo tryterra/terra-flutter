@@ -1,3 +1,7 @@
+## 0.9.0-samsung.5
+
+* Bump android-sdk to 0.0.13 — fixes Samsung-direct background sync silently stopping on devices where the Samsung Health bind is slow to warm up (schedulers no longer abort the sync on a slow bind) (https://github.com/tryterra/TerraAndroidLocal/pull/31)
+
 ## 0.9.0-samsung.4
 
 * Bump android-sdk to 0.0.12 — fixes a crash on init when the user is linked to Samsung Health but the Samsung Health app is not installed (https://github.com/tryterra/TerraAndroidLocal/pull/26)
