@@ -33,5 +33,9 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+      # setup-dart is what actually mints the pub.dev OIDC credential; without it
+      # the publish fails to authenticate. flutter (not dart) runs the publish,
+      # since a Flutter package can't be published with plain `dart pub`.
+      - uses: dart-lang/setup-dart@v1
       - run: flutter pub get
       - run: flutter pub publish --force
