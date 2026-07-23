@@ -34,13 +34,19 @@ class TerraFlutter {
       Connection connection,
       String token,
       bool schedulerOn,
-      List<CustomPermission> customPermissions) async {
+      List<CustomPermission> customPermissions,
+      {DateTime? dataStartDate}) async {
     return SuccessMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('initConnection', {
       "connection": connection.connectionString,
       "token": token,
       "schedulerOn": schedulerOn,
       "customPermissions":
-          customPermissions.map((c) => c.customPermissionString).toList()
+          customPermissions.map((c) => c.customPermissionString).toList(),
+      "dataStartDate": dataStartDate != null
+          ? convertToProperIsoFormat(DateTime.fromMillisecondsSinceEpoch(
+              dataStartDate.millisecondsSinceEpoch,
+              isUtc: true))
+          : null
     })));
   }
 

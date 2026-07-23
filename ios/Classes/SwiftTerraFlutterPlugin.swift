@@ -187,6 +187,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 		token: String,
 		schedulerOn: Bool,
 		customPermissions: [String],
+		dataStartDate: Date?,
 		result: @escaping FlutterResult
 	){
 		let c = connectionParse(connection: connection)
@@ -196,6 +197,7 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 				token: token,
 				customReadTypes: customPermissionsSet(customPermissions: customPermissions),
 				schedulerOn: schedulerOn,
+				dataStartDate: dataStartDate,
 				completion: {success, error in
                     if let error = error{
                         result(["success": success, "error": self.errorMessage(error)])
@@ -742,11 +744,17 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 						result: result
 					)
 				case "initConnection":
+					let dataStartDateString = args["dataStartDate"] as? String
+					let dataStartDate = dataStartDateString.flatMap { dateFormatter.date(from: $0) }
+					if dataStartDateString != nil && dataStartDate == nil {
+						print("Could not parse dataStartDate; no lower bound will be applied")
+					}
 					initConnection(
 						connection: args["connection"] as! String,
 						token: args["token"] as! String,
 						schedulerOn: args["schedulerOn"] as! Bool,
 						customPermissions: args["customPermissions"] as! [String],
+						dataStartDate: dataStartDate,
 						result: result
 					)
 				case "getBody":
