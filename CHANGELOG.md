@@ -1,3 +1,8 @@
+## 0.10.0
+* Bump TerraAndroid SDK to 1.7.2 (https://github.com/tryterra/TerraAndroid/wiki/Change-Log) — fixes Android Health Connect data not syncing. Upgrade recommended for all Android users.
+* Android `initTerra`, `initConnection` and `getUserId` now return the real success value from the native SDK instead of always returning `true`.
+    - Code that branches on `success` can now take failure paths that previously never fired.
+
 ## 0.9.4
 * Bump TerraiOS SDK to ~> 1.7.10 — Apple Watch lap/segment fix: laps now follow the user's segment markers, with correct per-segment distance/pace/HR/power (ZD 5587).
 
