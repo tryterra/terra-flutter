@@ -1,3 +1,7 @@
+## 0.9.0-samsung.6-beta.1
+
+* **BETA (for validation).** Bump android-sdk to 0.0.14-beta.1 — Samsung-direct background schedulers now request only each data type's own permission group instead of all 17 types. Over-requesting types the app isn't approved for in the Samsung Partner console caused the SDK to withhold data on release builds (auth ok, no data). Validate on a **release** build before we promote to a stable release. (https://github.com/tryterra/TerraAndroidLocal/pull/35)
+
 ## 0.9.0-samsung.5
 
 * Bump android-sdk to 0.0.13 — fixes Samsung-direct background sync silently stopping on devices where the Samsung Health bind is slow to warm up (schedulers no longer abort the sync on a slow bind) (https://github.com/tryterra/TerraAndroidLocal/pull/31)
