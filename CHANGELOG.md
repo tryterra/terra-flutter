@@ -1,3 +1,7 @@
+## 0.9.0-samsung.6-beta.3
+
+* **BETA (for validation).** Bump android-sdk to 0.0.14-beta.3 — adds on-foreground data sync: re-instantiating Terra when your app is foregrounded now pulls fresh data instead of waiting out the ~8h interval (throttled to 5 min; respects the schedulerOn flag). Includes the per-type permission resolution from beta.2. (https://github.com/tryterra/TerraAndroidLocal/pull/36)
+
 ## 0.9.0-samsung.6-beta.2
 
 * **BETA (for validation).** Bump android-sdk to 0.0.14-beta.2 — resolves Samsung permissions per data type, so a customer approved for only some types no longer loses *all* guarded reads (heart rate, SpO2, floors) on release builds. Supersedes beta.1, which narrowed to permission groups but the groups still bundled unapproved types. (https://github.com/tryterra/TerraAndroidLocal/pull/35)
