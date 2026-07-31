@@ -1,3 +1,7 @@
+## 0.9.0-samsung.6-beta.4
+
+* **BETA (for validation).** Bump android-sdk to 0.0.14-beta.4 — (1) pulls now follow the *user's* custom permissions, not the developer's account scopes, so a user who requested steps/activity/HR no longer gets an unwanted body payload; (2) fixes the foreground sync dropping steps/activity (it now awaits each read). (https://github.com/tryterra/TerraAndroidLocal/pull/36)
+
 ## 0.9.0-samsung.6-beta.3
 
 * **BETA (for validation).** Bump android-sdk to 0.0.14-beta.3 — adds on-foreground data sync: re-instantiating Terra when your app is foregrounded now pulls fresh data instead of waiting out the ~8h interval (throttled to 5 min; respects the schedulerOn flag). Includes the per-type permission resolution from beta.2. (https://github.com/tryterra/TerraAndroidLocal/pull/36)
