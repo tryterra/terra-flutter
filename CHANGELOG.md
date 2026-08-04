@@ -1,3 +1,8 @@
+## 0.10.1
+* Android: fix a `NullPointerException` in `onDetachedFromEngine` when the plugin runs on a headless
+  Flutter engine that never attaches an Activity, such as an FCM background isolate. The method
+  channel is created in `onAttachedToActivity`, so it is null on that path.
+
 ## 0.10.0
 * Bump TerraAndroid SDK to 1.7.2 (https://github.com/tryterra/TerraAndroid/wiki/Change-Log) — fixes Android Health Connect data not syncing. Upgrade recommended for all Android users.
 * Android `initTerra`, `initConnection` and `getUserId` now return the real success value from the native SDK instead of always returning `true`.
