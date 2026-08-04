@@ -747,7 +747,12 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 					let dataStartDateString = args["dataStartDate"] as? String
 					let dataStartDate = dataStartDateString.flatMap { dateFormatter.date(from: $0) }
 					if dataStartDateString != nil && dataStartDate == nil {
-						print("Could not parse dataStartDate; no lower bound will be applied")
+						result(FlutterError(
+							code: "error",
+							message: "could not parse dataStartDate",
+							details: nil
+						))
+						return
 					}
 					initConnection(
 						connection: args["connection"] as! String,

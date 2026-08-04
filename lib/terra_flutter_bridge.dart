@@ -11,6 +11,15 @@ String convertToProperIsoFormat(DateTime date){
       return date.toUtc().toIso8601String();
 }
 
+// Rounds up, because truncating a lower bound would admit samples older than the
+// caller asked for. Milliseconds because the iOS ISO8601 parser rejects the six
+// fractional digits a microsecond-precision DateTime serialises to.
+int millisecondCeiling(DateTime date) {
+  return (date.toUtc().microsecondsSinceEpoch /
+          Duration.microsecondsPerMillisecond)
+      .ceil();
+}
+
 // Functions bridging
 class TerraFlutter {
   static const MethodChannel _channel = MethodChannel('terra_flutter_bridge');
@@ -44,7 +53,7 @@ class TerraFlutter {
           customPermissions.map((c) => c.customPermissionString).toList(),
       "dataStartDate": dataStartDate != null
           ? convertToProperIsoFormat(DateTime.fromMillisecondsSinceEpoch(
-              dataStartDate.millisecondsSinceEpoch,
+              millisecondCeiling(dataStartDate),
               isUtc: true))
           : null
     })));
