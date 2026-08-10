@@ -164,4 +164,12 @@ class TerraFlutter {
   static Future<Set<String>> getGivenPermissions() async {
     return Set<String>.from(await _channel.invokeMethod('getGivenPermissions'));
   }
+
+  /// iOS only. Filters out HealthKit data from the given bundle identifiers.
+  /// On Android this is a no-op.
+  static Future<void> setIgnoredSources(List<String> sources) async {
+    await _channel.invokeMethod('setIgnoredSources', {
+      "sources": sources
+    });
+  }
 }
