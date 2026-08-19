@@ -1,3 +1,19 @@
+## 0.11.0
+* Bump TerraiOS SDK to ~> 1.9.1 (from ~> 1.7.10) — **upgrade recommended for all iOS users.**
+    - Fixes background Apple Health data being lost permanently. A background wake that could not
+      publish (device locked, or the upload failed) still drained the pending cache and advanced the
+      HealthKit anchors, so the skipped samples were discarded and never re-read — the device went
+      silent and stayed silent. Reads are now deferred and replayed on unlock, and the caches and
+      anchors are only retired once the data is actually on the wire (ZD 6317).
+    - Guards a crash on HealthKit unit conversion for BMI and other body quantities.
+    - `initTerra` on iOS can now return `success: false` with an `error` for Apple Health.
+      HealthKit authorisation failures previously never reached the caller, so this path never fired.
+    - Apple Health init no longer hangs forever if HealthKit never calls back; it times out after 60s
+      and reports a failure.
+    - Adds the `healthObservation` data type (raw HealthKit sample push). Requested only when the
+      scope is enabled for your developer account, so no new HealthKit prompt for existing apps.
+    - Daily samples that cross midnight are attributed to the day they start.
+
 ## 0.10.1
 * Android: fix a `NullPointerException` in `onDetachedFromEngine` when the plugin runs on a headless
   Flutter engine that never attaches an Activity, such as an FCM background isolate. The method
