@@ -11,6 +11,14 @@ String convertToProperIsoFormat(DateTime date){
       return date.toUtc().toIso8601String();
 }
 
+// Rounds up so the floor can only move later, never admitting older samples.
+// Milliseconds because the iOS ISO8601 parser rejects six fractional digits.
+int millisecondCeiling(DateTime date) {
+  return (date.toUtc().microsecondsSinceEpoch /
+          Duration.microsecondsPerMillisecond)
+      .ceil();
+}
+
 // Functions bridging
 class TerraFlutter {
   static const MethodChannel _channel = MethodChannel('terra_flutter_bridge');
@@ -30,17 +38,30 @@ class TerraFlutter {
     })));
   }
 
+  /// [dataStartDate] is Apple Health only. No other connection has an equivalent
+  /// floor, and the Android plugin drops the argument, so passing it for anything
+  /// else throws rather than being silently ignored.
   static Future<SuccessMessage?> initConnection(
       Connection connection,
       String token,
       bool schedulerOn,
-      List<CustomPermission> customPermissions) async {
+      List<CustomPermission> customPermissions,
+      {DateTime? dataStartDate}) async {
+    if (dataStartDate != null && connection != Connection.appleHealth) {
+      throw ArgumentError.value(dataStartDate, 'dataStartDate',
+          'only Apple Health supports a data start date');
+    }
     return SuccessMessage.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('initConnection', {
       "connection": connection.connectionString,
       "token": token,
       "schedulerOn": schedulerOn,
       "customPermissions":
-          customPermissions.map((c) => c.customPermissionString).toList()
+          customPermissions.map((c) => c.customPermissionString).toList(),
+      "dataStartDate": dataStartDate != null
+          ? convertToProperIsoFormat(DateTime.fromMillisecondsSinceEpoch(
+              millisecondCeiling(dataStartDate),
+              isUtc: true))
+          : null
     })));
   }
 
