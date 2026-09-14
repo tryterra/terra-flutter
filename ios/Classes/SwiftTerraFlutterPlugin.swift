@@ -719,6 +719,11 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 
 
 
+	private func setIgnoredSources(sources: [String], result: @escaping FlutterResult) {
+		Terra.setIgnoredSources(sources)
+		result(["success": true])
+	}
+
 	// exposed handler
 	// parse arguments and call appropriate function
 	public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -827,6 +832,9 @@ public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
 					break;
 				case "postPlannedWorkout":
 					postPlannedWorkout(connection: args["connection"] as! String, workout: args["payload"] as! String, result: result)
+					break;
+				case "setIgnoredSources":
+					setIgnoredSources(sources: args["sources"] as? [String] ?? [], result: result)
 					break;
 				default:
 					result(FlutterMethodNotImplemented)
