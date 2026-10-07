@@ -4,10 +4,10 @@ import TerraiOS
 import Foundation
 import HealthKit
 
-public class SwiftTerraFlutterPlugin: NSObject, FlutterPlugin {
+public class TerraFlutterPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "terra_flutter_bridge", binaryMessenger: registrar.messenger())
-    let instance = SwiftTerraFlutterPlugin()
+    let instance = TerraFlutterPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
