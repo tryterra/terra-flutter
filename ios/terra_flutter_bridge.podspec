@@ -13,7 +13,7 @@ Flutter Bridge for Terra iOS
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Try Terra' => 'dev@tryterra.co' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+  s.source_files = 'terra_flutter_bridge/Sources/terra_flutter_bridge/**/*.swift'
   s.dependency 'Flutter'
   s.dependency 'TerraiOS', '~> 1.9.1'
   s.frameworks = ['HealthKit']
