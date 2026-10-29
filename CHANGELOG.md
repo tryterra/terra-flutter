@@ -1,3 +1,13 @@
+## 0.9.0-samsung.7
+
+* Bump TerraiOS SDK to ~> 1.9.2 (from ~> 1.7.9), bringing the 0.11.0 iOS fixes to the Samsung line. Android is unchanged (android-sdk 0.0.14).
+    - HealthKit is no longer read while the device is locked, so daily step counts stop dropping mid-day.
+    - A sample that crosses midnight is counted whole in the day it started instead of split across both, so totals for those days increase.
+    - Detailed step, distance and floor samples are kept when another app writes a whole-day summary sample.
+    - Background Apple Health data is no longer lost when a wake cannot publish (ZD 6317), and long backfills no longer get the app killed.
+    - Behaviour changes: `initConnection` on iOS can return `success: false` with an `error` when HealthKit authorisation fails; `get*` calls can return `NoInternet`, `ServiceUnavailable` or `HealthKitUnavailable`; metrics HealthKit never observed are omitted from payloads instead of sent as 0; duplicate deliveries are suppressed; workouts carry raw workout events.
+    - Existing apps: run `pod update TerraiOS` after upgrading, as a Podfile.lock still on 1.7.x will not resolve.
+
 ## 0.9.0-samsung.6-beta.4
 
 * **BETA (for validation).** Bump android-sdk to 0.0.14-beta.4 — (1) pulls now follow the *user's* custom permissions, not the developer's account scopes, so a user who requested steps/activity/HR no longer gets an unwanted body payload; (2) fixes the foreground sync dropping steps/activity (it now awaits each read). (https://github.com/tryterra/TerraAndroidLocal/pull/36)
