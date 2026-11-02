@@ -66,8 +66,6 @@ class _MyAppState extends State<MyApp> {
     // USE YOUR OWN CATCH BLOCKS
     // HAVING ALL FUNCTIONS IN THE SAME CATCH IS NOT A GOOD IDEA
     try {
-      DateTime now = DateTime.now().toUtc();
-      DateTime lastMidnight = DateTime(now.year, now.month, now.day);
       initialised = await TerraFlutter.initTerra(constants.devId, "test_ref2");
       // await postPlannedWorkout_();
       logger.d(initialised?.success);

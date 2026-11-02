@@ -231,8 +231,6 @@ extension ConnectionExtension on Connection {
         return 'FREESTYLE_LIBRE';
       case Connection.healthConnect:
         return 'HEALTH_CONNECT';
-      default:
-        return 'UNDEFINED';
     }
   }
 }
@@ -324,8 +322,6 @@ extension CustomPermissionExtension on CustomPermission {
         return "POWER";
       case CustomPermission.electrocardiogram:
         return "ELECTROCARDIOGRAM";
-      default:
-        return 'UNDEFINED';
     }
   }
 }

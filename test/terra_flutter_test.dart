@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:terra_flutter_bridge/terra_flutter_bridge.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('terra_flutter_bridge');
@@ -7,13 +8,18 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      return '42';
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+      return '${methodCall.method}:${methodCall.arguments['text']}';
     });
   });
 
   tearDown(() {
-    channel.setMockMethodCallHandler(null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, null);
   });
 
+  test('testFunction round-trips over the plugin channel', () async {
+    expect(await TerraFlutter.testFunction('hello'), 'testFunction:hello');
+  });
 }
